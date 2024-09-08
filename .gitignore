@@ -1,0 +1,71 @@
+# Entorno virtual (virtual environment)
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Archivos y directorios de Python compilados
+*.pyc
+__pycache__/
+
+# Archivos y carpetas ocultos de macOS y Unix
+.DS_Store
+*.swp
+.sass-cache
+Thumbs.db
+
+# Archivos de configuración de IDEs
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos generados por el sistema operativo
+*.log
+*.pot
+*.mo
+*.db
+*.sqlite3
+*.pyo
+*.pyd
+
+# Archivos relacionados con el control de dependencias
+Pipfile.lock
+poetry.lock
+
+# Archivos de migración de la base de datos de Django (opcional si no deseas versionar las migraciones)
+# Solo si las generas manualmente y prefieres no versionarlas.
+#migrations/
+
+# Archivos relacionados con el despliegue
+*.env
+*.env.*
+.env.local
+.env.production
+.env.production.local
+.env.test
+.env.test.local
+
+# Archivos relacionados con el cache y compilación estática
+staticfiles/
+media/
+*.out
+*.bin
+
+# Archivos de configuración de Docker
+docker-compose.override.yml
+docker-compose.*.yml
+
+# Archivos de node (si utilizas npm o yarn para manejar recursos estáticos)
+node_modules/
+npm-debug.log
+yarn-error.log
+.yarn-integrity
+
+# Archivos de seguridad o configuraciones de despliegue (como claves secretas)
+secrets.json
+.secret_key
+
+# Archivos de control de versiones de Django y bases de datos locales
+db.sqlite3
