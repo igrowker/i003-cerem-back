@@ -1,3 +1,4 @@
+# Create your models here.
 from django.db import models
 
 # Modelo para representar a los usuarios del CRM.
