@@ -80,7 +80,7 @@ class Campana(models.Model):
     )
 
     class Meta:
-        db_table = 'campana'
+        db_table = 'campanas'
 
 
 class EstadisticaCampana(models.Model):
@@ -93,4 +93,4 @@ class EstadisticaCampana(models.Model):
     clicks = models.IntegerField()
 
     class Meta:
-        db_table = 'estadisticasCampana'
+        db_table = 'estadisticasCampanas'
