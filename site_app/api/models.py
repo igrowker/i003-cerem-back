@@ -50,6 +50,9 @@ class Cliente(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
 
+    class Meta:
+        db_table = 'clientes'
+
 
 class Tarea(models.Model):
     id = models.AutoField(primary_key=True)
@@ -57,6 +60,9 @@ class Tarea(models.Model):
     fecha = models.DateTimeField()
     estado = models.CharField(max_length=50)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'tareas'
 
 
 class Campana(models.Model):
@@ -73,6 +79,9 @@ class Campana(models.Model):
         related_name='rendimiento'
     )
 
+    class Meta:
+        db_table = 'campana'
+
 
 class EstadisticaCampana(models.Model):
     id = models.AutoField(primary_key=True)
@@ -82,3 +91,6 @@ class EstadisticaCampana(models.Model):
     tasa_apertura = models.FloatField()
     tasa_conversion = models.FloatField()
     clicks = models.IntegerField()
+
+    class Meta:
+        db_table = 'estadisticasCampana'
