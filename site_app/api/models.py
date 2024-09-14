@@ -78,6 +78,11 @@ class Campana(models.Model):
         blank=True, 
         related_name='rendimiento'
     )
+    clics_totales = models.IntegerField(default=0)
+    conversiones_totales = models.IntegerField(default=0)
+    # Campos para almacenar información relacionada con Google Calendar y Keep (opcional)
+    google_calendar_event_id = models.CharField(max_length=255, null=True, blank=True)
+    google_keep_note_id = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'campanas'
