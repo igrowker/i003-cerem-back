@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
-
+#Gestor Usuarios Personalizados. 
 class UserManager(BaseUserManager):
 
     def _create_user(self, email, name, password, is_staff, is_superuser, **extra_fields):
@@ -15,9 +15,11 @@ class UserManager(BaseUserManager):
         user.save(using=self.db)
         return user
     
+    #Crea User
     def create_user(self, email, name, password=None, **extra_fields):
         return self._create_user(email, name, password, False, **extra_fields)
 
+    #Crea Super User
     def create_superuser(self, email, name, password=None, **extra_fields):
         return self._create_user(email, name, password, True, **extra_fields)
 
@@ -41,7 +43,7 @@ class Usuario(AbstractBaseUser):
         return f"Usuario {self.id}. {self.email}"
     
 
-
+#Clientes asociados a un User
 class Cliente(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
@@ -54,6 +56,7 @@ class Cliente(models.Model):
         db_table = 'clientes'
 
 
+#Tareas asignadas a User
 class Tarea(models.Model):
     id = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=255)
@@ -65,6 +68,7 @@ class Tarea(models.Model):
         db_table = 'tareas'
 
 
+#Campana gestionadas por User
 class Campana(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
@@ -88,6 +92,7 @@ class Campana(models.Model):
         db_table = 'campanas'
 
 
+#Estadisticas de la campana
 class EstadisticaCampana(models.Model):
     id = models.AutoField(primary_key=True)
     campana = models.ForeignKey(

@@ -7,6 +7,7 @@ from .serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, 
 from transformers import pipeline
 import csv
 
+#Funcionabilidades de la Tarea. Con post marca tareas completadas
 class TareaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Tarea.objects.all()
@@ -19,6 +20,7 @@ class TareaViewSet(viewsets.ModelViewSet):
         tarea.save()
         return Response({'message': 'Tarea completada'})
 
+#Operaciones de modelo Campana, estadisticas y genera contenido de marketing auto con Transformers. Solo users autenticados
 class CampanaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Campana.objects.all()
@@ -34,6 +36,7 @@ class CampanaViewSet(viewsets.ModelViewSet):
             'tasa_conversion': campana.conversiones_totales / campana.clics_totales if campana.clics_totales > 0 else 0
         }
         return Response(estadisticas)
+    
     @action(detail=True, methods=['post'])
     def generar_contenido(self, request, pk=None):
         campana = self.get_object()
@@ -45,6 +48,7 @@ class CampanaViewSet(viewsets.ModelViewSet):
         campana.save()
         return Response({'message': 'Contenido generado con éxito'})
 
+#CRUD para clientes con acceso limitado a user Autenticado
 class ClienteViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Cliente.objects.all()
@@ -81,14 +85,15 @@ class ImportarDatosView(APIView):
         # Lista para almacenar errores
         errors = []
 
+        #Valida el csv
         for row_index, row in enumerate(reader, start=1):
             try:
-                # Validar campos requeridos
+                # Validar campos requeridos existan y no esten vacios
                 for field in required_fields:
                     if field not in row or not row[field]:
                         raise ValueError(f"El campo '{field}' es obligatorio en la fila {row_index}")
 
-                # Validar tipos de datos
+                # Validar tipos de datos y convierte con field_type si es necesario
                 for field, field_type in field_types.items():
                     if field in row and row[field]:
                         row[field] = field_type(row[field])
