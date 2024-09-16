@@ -2,11 +2,14 @@ from rest_framework import viewsets, permissions,status
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from services import EstadisticaService,CampanaService,ClienteService
 from models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario
 from serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer
 from transformers import pipeline
 import csv
+
+#Funcionabilidades de la Tarea. Con post marca tareas completadas
 
 class TareaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -37,13 +40,24 @@ class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CampanaSerializer
 
     @action(detail=True, methods=['get'])
-    @action(detail=True, methods=['get'])
     def estadisticas(self, request, pk=None):
         campana = self.get_object()
         estadistica_service = EstadisticaService()
         estadisticas = estadistica_service.calcular_estadisticas(campana)
         return Response(estadisticas)
+    
+    @action(detail=True, methods=['post'])
+    def generar_contenido(self, request, pk=None):
+        campana = self.get_object()
+        generador_texto = pipeline("text-generation", model="gpt2")
+        prompt = f"Generar contenido para una campaña de marketing sobre {campana.tema}"
+        contenido = generador_texto(prompt, max_length=100)[0]['generated_text']
+        # Actualizar la campaña con el contenido generado
+        campana.contenido = contenido
+        campana.save()
+        return Response({'message': 'Contenido generado con éxito'})
 
+#CRUD para clientes con acceso limitado a user Autenticado
 class ClienteViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Cliente.objects.all()
@@ -80,14 +94,15 @@ class ImportarDatosView(APIView):
         # Lista para almacenar errores
         errors = []
 
+        #Valida el csv
         for row_index, row in enumerate(reader, start=1):
             try:
-                # Validar campos requeridos
+                # Validar campos requeridos existan y no esten vacios
                 for field in required_fields:
                     if field not in row or not row[field]:
                         raise ValueError(f"El campo '{field}' es obligatorio en la fila {row_index}")
 
-                # Validar tipos de datos
+                # Validar tipos de datos y convierte con field_type si es necesario
                 for field, field_type in field_types.items():
                     if field in row and row[field]:
                         row[field] = field_type(row[field])
