@@ -104,10 +104,3 @@ class EstadisticaCampana(models.Model):
 
     class Meta:
         db_table = 'estadisticasCampanas'
-        
-
-#                                                   GCALENDAR OAUTH
-class Event(models.Model):
-    summary = models.CharField(max_length=255)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()

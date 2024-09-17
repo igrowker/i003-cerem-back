@@ -1,5 +1,6 @@
 from django.urls import path
-from .view import (
+from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
+from views.view import (
     TareasView, 
     CrearCampanaView, 
     ClientesView, 
@@ -7,8 +8,12 @@ from .view import (
     EstadisticasCampanaView, 
     ImportarDatosView
 )
+from . import views
 
 urlpatterns = [
+    # Devuelve las estadísticas y rendimiento de una campaña específica.
+    path('estadisticas/campana/<int:campana_id>/', EstadisticasCampanaViewSet.as_view(), name='estadisticas_campana'),
+    
     # Devuelve todas las tareas y eventos de Google Calendar y Keep.
     path('tareas/', TareasView.as_view(), name='tareas'), 
     
@@ -21,9 +26,12 @@ urlpatterns = [
     # Agrega un nuevo cliente al CRM.
     path('clientes/agregar/', AgregarClienteView.as_view(), name='agregar_cliente'),
     
-    # Devuelve las estadísticas y rendimiento de una campaña específica.
-    path('estadisticas/campana/', EstadisticasCampanaView.as_view(), name='estadisticas_campana'),
-    
+        
     # Permite importar datos de clientes desde un archivo CSV o similar.
     path('datos/importar/', ImportarDatosView.as_view(), name='importar_datos'),
+    
+    #                   GCALENDAR OAUTH
+    path('calendar/', views.CalendarView.as_view(), name='calendar'),
+    path('fetch-events/', views.fetch_events, name='fetch_events'),
+    
 ]

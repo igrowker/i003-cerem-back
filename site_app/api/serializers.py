@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tarea, Campana, Cliente, EstadisticaCampana
+from models import Tarea, Campana, Cliente, EstadisticaCampana
 
 # Serializador para el modelo Tarea.
 class TareaSerializer(serializers.ModelSerializer):
