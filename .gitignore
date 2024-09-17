@@ -1,3 +1,6 @@
+# Credenciales
+credentials/
+
 # Entorno virtual (virtual environment)
 venv/
 env/
