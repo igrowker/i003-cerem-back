@@ -1,12 +1,13 @@
-from django.db import models
-from models import Campana
+from api.repositories.EstadisticasRepository import EstadisticasRepository
 
-class EstadisticaService:
-    def calcular_estadisticas(self, campana):
-        # Lógica para calcular las estadísticas
-        estadisticas = {
-            'tasa_apertura': campana.email_enviados / campana.emails_totales if campana.emails_totales else 0,
-            'ctr': campana.clics_totales / campana.email_enviados if campana.email_enviados else 0,
-            'tasa_conversion': campana.conversiones_totales / campana.clics_totales if campana.clics_totales else 0
-        }
-        return estadisticas
+#Implementa el servicio que recopila y procesa los datos de las campañas
+class EstadisticaCampanaService:
+
+    def obtener_estadisticas(self, campana_id):
+        return EstadisticasRepository.obtener_estadisticas_por_campana(campana_id)
+
+    def procesar_estadisticas(self, campana, tasa_apertura, tasa_conversion, clicks):
+        # Procesa y guarda las estadisticas de la campaña
+        return EstadisticasRepository.crear_estadisticas(
+            campana, tasa_apertura, tasa_conversion, clicks
+        )
