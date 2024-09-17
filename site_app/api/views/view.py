@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from services import EstadisticaCampanaService,CampanaService,ClienteService
+from services import EstadisticasService,CampanaService,ClienteService
 from models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario
 from serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer
 from transformers import pipeline
@@ -42,7 +42,7 @@ class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
     @action(detail=True, methods=['get'])
     def estadisticas(self, request, pk=None):
         campana = self.get_object()
-        estadistica_service = EstadisticaCampanaService()
+        estadistica_service = EstadisticasService()
         estadisticas = estadistica_service.calcular_estadisticas(campana)
         return Response(estadisticas)
     
