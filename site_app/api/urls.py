@@ -3,6 +3,7 @@ from rest_framework import routers
 from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
 from api.controllers.ClienteController import ClienteViewSet
 from api.controllers.CampanaController import CampanaViewSet
+from site_app.api import views
 from views.view import (
     TareasView, 
     CrearCampanaView, 
