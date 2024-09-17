@@ -4,6 +4,7 @@ certifi==2024.8.30
 charset-normalizer==3.3.2
 colorama==0.4.6
 Django==5.1.1
+django-allauth==64.2.1
 djangorestframework==3.15.2
 filelock==3.16.0
 fsspec==2024.9.0
