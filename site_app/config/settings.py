@@ -47,6 +47,11 @@ BASE_APPS = [
 
 THIRD_APPS = [
     'rest_framework',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 LOCAL_APPS = [
@@ -64,6 +69,44 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#                                                                 CONFIGURACION OAUTH PARA SITIO -- METODO 1
+
+# Configura el dominio del sitio
+SITE_ID = 1
+
+# Configura el backend de autenticación
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Para usuarios normales
+    'allauth.account.auth_backends.AuthenticationBackend',  # Para OAuth
+)
+
+# Configura los proveedores de OAuth
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': 'TU_CLIENT_ID',
+            'secret': 'TU_CLIENT_SECRET',
+        },
+    },
+}
+
+# URL de redirección después de iniciar sesión
+LOGIN_REDIRECT_URL = '/'
+
+
+
+#                                                                    METODO 2 DE OAUTH
+
+OAUTH2_PROVIDER = {
+    'SCOPES': {'calendar': 'Read/write access to Calendar'},
+    'CLIENT_ID': 'YOUR CLIENT ID',
+    'CLIENT_SECRET': 'YOUR CLIENT_SECRET',
+}
+
+GOOGLE_TOKEN_FILE = 'token.json'
+
+#                                                                        FIN CFG OAUTH
 
 ROOT_URLCONF = 'config.urls'
 

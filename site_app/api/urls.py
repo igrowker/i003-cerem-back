@@ -8,6 +8,7 @@ from views.view import (
     EstadisticasCampanaView, 
     ImportarDatosView
 )
+from . import views
 
 urlpatterns = [
     # Devuelve las estadísticas y rendimiento de una campaña específica.
@@ -28,4 +29,9 @@ urlpatterns = [
         
     # Permite importar datos de clientes desde un archivo CSV o similar.
     path('datos/importar/', ImportarDatosView.as_view(), name='importar_datos'),
+    
+    #                   GCALENDAR OAUTH
+    path('calendar/', views.CalendarView.as_view(), name='calendar'),
+    path('fetch-events/', views.fetch_events, name='fetch_events'),
+    
 ]
