@@ -1,6 +1,6 @@
 from django.urls import path
 from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
-from views.view import (
+from api.views.view import (
     TareasView, 
     CrearCampanaView, 
     ClientesView, 

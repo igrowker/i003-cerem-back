@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from services import EstadisticasService,CampanaService,ClienteService
+from ..services import EstadisticasService,CampanaService,ClienteService
 from models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario
 from serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer
 from transformers import pipeline
@@ -14,7 +14,6 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from oauth2_provider.views.generic import ProtectedResourceView
 from api.models import Event
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request

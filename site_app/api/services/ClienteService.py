@@ -1,6 +1,6 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
-from models import Cliente
+from ..models import Cliente
 
 # Servicio de Cliente
 class ClienteService:
