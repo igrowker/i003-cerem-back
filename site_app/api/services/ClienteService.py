@@ -1,25 +1,19 @@
 from django.db import models
-from django.shortcuts import get_object_or_404
-from models import Cliente
+from repositories import ClienteRepository
 
-# Servicio de Cliente
 class ClienteService:
-    def crear_cliente(self, nombre, apellido, email):
-        cliente = Cliente(nombre=nombre, apellido=apellido, email=email)
-        cliente.save()
-        return cliente
+    def crear_cliente(self, data):
+        cliente_repository = ClienteRepository()
+        return cliente_repository.create(data)
 
-    def obtener_cliente(self, id):
-        return get_object_or_404(Cliente, pk=id)
+    def obtener_cliente_por_id(self, cliente_id):
+        cliente_repository = ClienteRepository()
+        return cliente_repository.get(cliente_id)
 
-    def actualizar_cliente(self, id, nombre, apellido, email):
-        cliente = self.obtener_cliente(id)
-        cliente.nombre = nombre
-        cliente.apellido = apellido
-        cliente.email = email
-        cliente.save()
-        return cliente
+    def actualizar_cliente(self, cliente_id, data):
+        cliente_repository = ClienteRepository()
+        return cliente_repository.update(cliente_id, data)
 
-    def eliminar_cliente(self, id):
-        cliente = self.obtener_cliente(id)
-        cliente.delete()
+    def eliminar_cliente(self, cliente_id):
+        cliente_repository = ClienteRepository()
+        return cliente_repository.delete(cliente_id)

@@ -1,15 +1,24 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
+from api.controllers.ClienteController import ClienteViewSet
+from api.controllers.CampanaController import CampanaViewSet
+from site_app.api import views
 from views.view import (
     TareasView, 
     CrearCampanaView, 
     ClientesView, 
     AgregarClienteView, 
     EstadisticasCampanaView, 
-    ImportarDatosView
+    ImportarDatosView,
+    CalendarView,
+    fetch_events
 )
-from . import views
 
+# Creamos un router para manejar las URLs de los ViewSets
+router = routers.DefaultRouter()
+router.register(r'campanas', CampanaViewSet)  # Suponiendo que CampanaViewSet está definido en tu archivo views.py
+router.register(r'clientes', ClienteViewSet) 
 urlpatterns = [
     # Devuelve las estadísticas y rendimiento de una campaña específica.
     path('estadisticas/campana/<int:campana_id>/', EstadisticasCampanaViewSet.as_view(), name='estadisticas_campana'),
@@ -33,5 +42,8 @@ urlpatterns = [
     #                   GCALENDAR OAUTH
     path('calendar/', views.CalendarView.as_view(), name='calendar'),
     path('fetch-events/', views.fetch_events, name='fetch_events'),
-    
+
+    # Incluye las rutas generadas por el router
+    path('', include(router.urls)),  
+   
 ]
