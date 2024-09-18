@@ -71,6 +71,3 @@ class TareaService:
     def sincronizar(self):
         # Obtener todas las tareas de la base de datos
         tareas = self.tarea_repository.all()
-
-        # Iterar sobre las tareas y comparar con Google Calendar y Google Keep
-        # ... (lógica de sincronización)
