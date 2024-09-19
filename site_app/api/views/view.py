@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from services import EstadisticasService,CampanaService,ClienteService
-from models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario
-from serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer
-from repositories import TareasRepository,CampanaRepository,ClienteRepository,EstadisticasRepository
+from ..services import EstadisticasService,CampanaService,ClienteService
+from ..models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario
+from ..serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer
+from ..repositories import TareasRepository,CampanaRepository,ClienteRepository,EstadisticasRepository
 from transformers import pipeline
 import csv
 
