@@ -23,13 +23,13 @@ from googleapiclient.discovery import build
 import datetime
 #
 
-#Funcionabilidades de la Tarea. Con post marca tareas completadas
-
+# Funcionalidades de la Tarea. Con post marca tareas completadas
 class TareaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Tarea.objects.all()
     serializer_class = TareaSerializer
- # Inyectamos el repositorio de tareas en el constructor
+
+    # Inyectamos el repositorio de tareas en el constructor
     def __init__(self, *args, **kwargs):
         self.tareas_repo = TareasRepository()
         super().__init__(*args, **kwargs)
@@ -44,18 +44,19 @@ class TareaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Tarea no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
+
 class CampanaCrearViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        campana_service = CampanaService()  # Puedes mantener el servicio o inyectar el repositorio
+        campana_service = CampanaService()
         data = request.data
         try:
             serializer = campana_service.crear_campana_con_contenido(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+
 
 
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
@@ -77,34 +78,22 @@ class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             return Response({'error': 'Campaña no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
-    @action(detail=True, methods=['post'])
-    def generar_contenido(self, request, pk=None):
-        campana = self.campanas_repo.obtener_por_id(pk)
-        if campana:
-            generador_texto = pipeline("text-generation", model="gpt2")
-            prompt = f"Generar contenido para una campaña de marketing sobre {campana.tema}"
-            contenido = generador_texto(prompt, max_length=100)[0]['generated_text']
-            # Actualizar la campaña con el contenido generado
-            campana.contenido = contenido
-            self.campanas_repo.guardar(campana)
-            return Response({'message': 'Contenido generado con éxito'})
-        else:
-            return Response({'error': 'Campaña no encontrada'}, status=status.HTTP_404_NOT_FOUND)
-
 
 # CRUD para clientes utilizando el repositorio
 class ClienteViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer 
+    serializer_class = ClienteSerializer
     # Inyectamos el repositorio de clientes en el constructor
     def __init__(self, *args, **kwargs):
         self.clientes_repo = ClienteRepository()
         super().__init__(*args, **kwargs)
 
+
 class EstadisticaCampanaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = EstadisticaCampana.objects.all()
     serializer_class = EstadisticaCampanaSerializer
+
 
 # Vista para importar datos desde CSV
 class ImportarDatosView(APIView):

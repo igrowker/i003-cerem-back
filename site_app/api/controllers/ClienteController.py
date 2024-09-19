@@ -12,3 +12,4 @@ class ClienteViewSet(viewsets.ModelViewSet):
     def __init__(self, **kwargs):
         self.cliente_service = ClienteService()
         super().__init__(**kwargs)
+
