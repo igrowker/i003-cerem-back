@@ -11,3 +11,4 @@ class EstadisticaCampanaService:
         return EstadisticasRepository.crear_estadisticas(
             campana, tasa_apertura, tasa_conversion, clicks
         )
+    

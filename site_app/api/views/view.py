@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from services import EstadisticasService,CampanaService,ClienteService
 from models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario
 from serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer
+from repositories import TareasRepository,CampanaRepository,ClienteRepository,EstadisticasRepository
 from transformers import pipeline
 import csv
 
@@ -28,53 +29,78 @@ class TareaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Tarea.objects.all()
     serializer_class = TareaSerializer
+ # Inyectamos el repositorio de tareas en el constructor
+    def __init__(self, *args, **kwargs):
+        self.tareas_repo = TareasRepository()
+        super().__init__(*args, **kwargs)
 
     @action(detail=True, methods=['post'])
     def completar_tarea(self, request, pk=None):
-        tarea = self.get_object()
-        tarea.completado = True
-        tarea.save()
-        return Response({'message': 'Tarea completada'})
+        tarea = self.tareas_repo.obtener_tarea_por_id(pk)
+        if tarea:
+            tarea.completado = True
+            tarea.save()
+            return Response({'message': 'Tarea completada'})
+        else:
+            return Response({'error': 'Tarea no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
 class CampanaCrearViewSet(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        campana_service = CampanaService()
+        campana_service = CampanaService()  # Puedes mantener el servicio o inyectar el repositorio
         data = request.data
         try:
-            serializer = campana_service.crear_campana_con_inhaltdo(data)
+            serializer = campana_service.crear_campana_con_contenido(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Campana.objects.all()
     serializer_class = CampanaSerializer
 
+    # Inyectamos los repositorios de campañas y estadísticas en el constructor
+    def __init__(self, *args, **kwargs):
+        self.campanas_repo = CampanaRepository()
+        self.estadisticas_repo = EstadisticasRepository()
+        super().__init__(*args, **kwargs)
+
     @action(detail=True, methods=['get'])
     def estadisticas(self, request, pk=None):
-        campana = self.get_object()
-        estadistica_service = EstadisticasService()
-        estadisticas = estadistica_service.calcular_estadisticas(campana)
-        return Response(estadisticas)
-    
+        campana = self.campanas_repo.obtener_por_id(pk)
+        if campana:
+            estadisticas = self.estadisticas_repo.calcular_estadisticas(campana)
+            return Response(estadisticas)
+        else:
+            return Response({'error': 'Campaña no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
     @action(detail=True, methods=['post'])
     def generar_contenido(self, request, pk=None):
-        campana = self.get_object()
-        generador_texto = pipeline("text-generation", model="gpt2")
-        prompt = f"Generar contenido para una campaña de marketing sobre {campana.tema}"
-        contenido = generador_texto(prompt, max_length=100)[0]['generated_text']
-        # Actualizar la campaña con el contenido generado
-        campana.contenido = contenido
-        campana.save()
-        return Response({'message': 'Contenido generado con éxito'})
+        campana = self.campanas_repo.obtener_por_id(pk)
+        if campana:
+            generador_texto = pipeline("text-generation", model="gpt2")
+            prompt = f"Generar contenido para una campaña de marketing sobre {campana.tema}"
+            contenido = generador_texto(prompt, max_length=100)[0]['generated_text']
+            # Actualizar la campaña con el contenido generado
+            campana.contenido = contenido
+            self.campanas_repo.guardar(campana)
+            return Response({'message': 'Contenido generado con éxito'})
+        else:
+            return Response({'error': 'Campaña no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
-#CRUD para clientes con acceso limitado a user Autenticado
+
+# CRUD para clientes utilizando el repositorio
 class ClienteViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer
+    serializer_class = ClienteSerializer 
+    # Inyectamos el repositorio de clientes en el constructor
+    def __init__(self, *args, **kwargs):
+        self.clientes_repo = ClienteRepository()
+        super().__init__(*args, **kwargs)
 
 class EstadisticaCampanaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = EstadisticaCampana.objects.all()
