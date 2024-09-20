@@ -129,3 +129,11 @@ class Event(models.Model):
     summary = models.CharField(max_length=255)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
+class AuditLog(models.Model):
+    campaign = models.ForeignKey(Campana, on_delete=models.CASCADE)
+    user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    action = models.CharField(max_length=50)
+    data_before = models.JSONField(null=True, blank=True)
+    data_after = models.JSONField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
