@@ -45,6 +45,13 @@ BASE_APPS = [
     'django.contrib.staticfiles',
 ]
 
+
+MIDDLEWARE = [
+    ...
+    'allauth.account.middleware.AccountMiddleware',
+    ...
+]
+
 THIRD_APPS = [
     'rest_framework',
     'django.contrib.sites',
