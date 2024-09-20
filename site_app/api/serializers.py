@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tarea, Campana, Cliente, EstadisticaCampana
+from .models import Tarea, Campana, Cliente, EstadisticaCampana, Event
 
 # Serializador para el modelo Tarea.
 class TareaSerializer(serializers.ModelSerializer):
@@ -24,3 +24,9 @@ class EstadisticaCampanaSerializer(serializers.ModelSerializer):
     class Meta:
         model = EstadisticaCampana
         fields = '__all__'  # Incluir todos los campos del modelo EstadisticaCampana.
+
+# Serializador para el modelo Event.
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ['id', 'summary', 'start_time', 'end_time']

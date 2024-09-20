@@ -2,10 +2,11 @@ from rest_framework import viewsets, permissions,status
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from ..services import EstadisticasService,CampanaService,ClienteService
-from ..models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario
-from ..serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer
+from ..models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario, Event
+from ..serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer, EventSerializer
 from ..repositories import TareasRepository,CampanaRepository,ClienteRepository,EstadisticasRepository
 from transformers import pipeline
 import csv
@@ -44,18 +45,19 @@ class TareaViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Tarea no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
-class CampanaCrearViewSet(APIView):
+class CampanaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
+    queryset = Campana.objects.all()
+    serializer_class = CampanaSerializer
 
-    def post(self, request):
-        campana_service = CampanaService()  # Puedes mantener el servicio o inyectar el repositorio
+    def create(self, request, *args, **kwargs):
+        campana_service = CampanaService()
         data = request.data
         try:
             serializer = campana_service.crear_campana_con_contenido(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)       
 
 
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
@@ -172,10 +174,20 @@ class ImportarDatosView(APIView):
 
 #                                               INTEGRACION G CALENDAR
 
-class CalendarView(ProtectedResourceView):
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        return HttpResponse("This is your calendar view")
+class CalendarView(viewsets.ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        events = Event.objects.all()
+        serializer = EventSerializer(events, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        serializer = EventSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def fetch_events(request):

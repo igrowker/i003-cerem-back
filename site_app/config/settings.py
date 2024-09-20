@@ -52,6 +52,7 @@ THIRD_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'oauth2_provider',
 ]
 
 LOCAL_APPS = [
@@ -68,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 #                                                                 CONFIGURACION OAUTH PARA SITIO -- METODO 1
@@ -146,7 +148,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',  # El nombre de la base de datos en Supabase
-        'USER': 'CeremProject',  # El usuario de la base de datos en Supabase
+        'USER': 'postgres.zpipmvsqazynfzoggdzd',  # El usuario de la base de datos en Supabase
         'PASSWORD': 'YJjZ8EGQPqXUtfI8',  # La contraseña que definiste
         'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Por ejemplo, db.xyz.supabase.co
         'PORT': '6543',  # Puerto para PostgreSQL
