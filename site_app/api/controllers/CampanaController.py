@@ -3,12 +3,16 @@ from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
-from models import Campana
-from serializers import CampanaSerializer
-from services import CampanaService
+migrationTest
+from ..models import Campana
+from ..serializers import CampanaSerializer
+from ..services import CampanaService
+from transformers import pipeline
+
 
 class CampanaContentGenerationError(APIException):
     pass
+
 
 class CampanaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]

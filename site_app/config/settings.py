@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    # ... (tus apps locales)
+    'oauth2_provider',
+
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -41,6 +42,23 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+
+INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+]
+
+#                                                                 CONFIGURACION OAUTH PARA SITIO -- METODO 1
+
+# Configura el dominio del sitio
 SITE_ID = 1
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -93,11 +111,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT'),
+        'NAME': 'postgres',  # El nombre de la base de datos en Supabase
+        'USER': 'postgres.zpipmvsqazynfzoggdzd',  # El usuario de la base de datos en Supabase
+        'PASSWORD': 'YJjZ8EGQPqXUtfI8',  # La contraseña que definiste
+        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Por ejemplo, db.xyz.supabase.co
+        'PORT': '6543',  # Puerto para PostgreSQL
     }
 }
 

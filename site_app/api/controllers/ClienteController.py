@@ -1,9 +1,9 @@
 from rest_framework import viewsets, permissions
-from rest_framework.response import Response
+from ..models import Cliente
+from ..serializers import ClienteSerializer
+from ..services import ClienteService
 
-from serializers import ClienteSerializer
-from services import ClienteService
-from models import Cliente
+from rest_framework.response import Response
 
 
 class ClienteViewSet(viewsets.ModelViewSet):

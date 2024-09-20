@@ -11,6 +11,7 @@ ENV/
 # Archivos y directorios de Python compilados
 *.pyc
 __pycache__/
+*.__pycache__/
 
 # Archivos y carpetas ocultos de macOS y Unix
 .DS_Store

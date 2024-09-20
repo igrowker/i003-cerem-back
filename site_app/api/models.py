@@ -129,6 +129,8 @@ class Event(models.Model):
     summary = models.CharField(max_length=255)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+    def __str__(self):
+        return self.summary
 
 class AuditLog(models.Model):
     campaign = models.ForeignKey(Campana, on_delete=models.CASCADE)

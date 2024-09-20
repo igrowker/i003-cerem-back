@@ -1,4 +1,4 @@
-from models import Cliente
+from ..models import Cliente
 
 class ClienteRepository:
     def obtener_por_id(self, cliente_id):

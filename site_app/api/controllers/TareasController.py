@@ -1,10 +1,9 @@
 from grpc import Status
-from rest_framework import viewsets, permissions
-from rest_framework.response import Response
+from rest_framework import viewsets, permissions,Response
+from ..models import Tarea
+from ..serializers import TareaSerializer
+from ..services import TareaService
 
-from models import Tarea
-from serializers import TareaSerializer
-from services import TareaService
 
 class TareaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]

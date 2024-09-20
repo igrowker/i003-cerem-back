@@ -1,4 +1,5 @@
-from models import Cliente
+from django.db import models
+from ..repositories import ClienteRepository
 from cryptography.fernet import Fernet
 
 class ClienteService:
