@@ -23,18 +23,43 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 import datetime
 #
+from drf_yasg.utils import swagger_auto_schema
 
-#Funcionabilidades de la Tarea. Con post marca tareas completadas
+# Swagger Schema Configuration
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Mi API de Gestión de Tareas, Campañas y Clientes",
+        default_version='v1',
+        description="Documentación de la API",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@example.com"),
+
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+
+)
+
+# TareaViewSet with Swagger Documentation
 class TareaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Tarea.objects.all()
     serializer_class = TareaSerializer
- # Inyectamos el repositorio de tareas en el constructor
+
+    # Inyectamos el repositorio de tareas en el constructor
     def __init__(self, *args, **kwargs):
         self.tareas_repo = TareasRepository()
         super().__init__(*args, **kwargs)
 
+    @swagger_auto_schema(
+        operation_summary="Marcar una tarea como completada",
+        operation_description="Marca una tarea existente como completada.",
+        responses={200: 'Tarea completada', 404: 'Tarea no encontrada'}
+    )
     @action(detail=True, methods=['post'])
     def completar_tarea(self, request, pk=None):
         tarea = self.tareas_repo.obtener_tarea_por_id(pk)
@@ -46,20 +71,31 @@ class TareaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Tarea no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
 class CampanaViewSet(viewsets.ModelViewSet):
+  pass
+# CampanaCrearViewSet with Swagger Documentation
+class CampanaCrearViewSet(APIView):
+
     permission_classes = [permissions.IsAuthenticated]
     queryset = Campana.objects.all()
     serializer_class = CampanaSerializer
-
     def create(self, request, *args, **kwargs):
+    @swagger_auto_schema(
+        operation_summary="Crear una nueva campaña",
+        operation_description="Crea una nueva campaña con contenido generado automáticamente.",
+        request_body=CampanaSerializer,
+        responses={201: 'Campaña creada', 400: 'Error al crear la campaña'}
+    )
+    def post(self, request):
         campana_service = CampanaService()
         data = request.data
         try:
             serializer = campana_service.crear_campana_con_contenido(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
+
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)       
 
-
+# CampanaEstadisticaViewSet with Swagger Documentation
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Campana.objects.all()
     serializer_class = CampanaSerializer
@@ -70,6 +106,11 @@ class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
         self.estadisticas_repo = EstadisticasRepository()
         super().__init__(*args, **kwargs)
 
+    @swagger_auto_schema(
+        operation_summary="Obtener estadísticas de una campaña",
+        operation_description="Obtiene las estadísticas de rendimiento de una campaña específica.",
+        responses={200: 'Estadísticas de la campaña', 404: 'Campaña no encontrada'}
+    )
     @action(detail=True, methods=['get'])
     def estadisticas(self, request, pk=None):
         campana = self.campanas_repo.obtener_por_id(pk)
@@ -77,36 +118,22 @@ class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
             estadisticas = self.estadisticas_repo.calcular_estadisticas(campana)
             return Response(estadisticas)
         else:
-            return Response({'error': 'Campaña no encontrada'}, status=status.HTTP_404_NOT_FOUND)
-
-    @action(detail=True, methods=['post'])
-    def generar_contenido(self, request, pk=None):
-        campana = self.campanas_repo.obtener_por_id(pk)
-        if campana:
-            generador_texto = pipeline("text-generation", model="gpt2")
-            prompt = f"Generar contenido para una campaña de marketing sobre {campana.tema}"
-            contenido = generador_texto(prompt, max_length=100)[0]['generated_text']
-            # Actualizar la campaña con el contenido generado
-            campana.contenido = contenido
-            self.campanas_repo.guardar(campana)
-            return Response({'message': 'Contenido generado con éxito'})
-        else:
-            return Response({'error': 'Campaña no encontrada'}, status=status.HTTP_404_NOT_FOUND)
-
-
+            return Response({'error': 'Campaña no encontrada'}, status=status.HTTP_400_BAD_REQUEST)
+                            
 # CRUD para clientes utilizando el repositorio
 class ClienteViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Cliente.objects.all()
-    serializer_class = ClienteSerializer 
-    # Inyectamos el repositorio de clientes en el constructor
-    def __init__(self, *args, **kwargs):
-        self.clientes_repo = ClienteRepository()
-        super().__init__(*args, **kwargs)
+    serializer_class = ClienteSerializer
+
+    def get_queryset(self):
+        # Si necesitas filtrar o ordenar los clientes, puedes hacerlo aquí
+        return Cliente.objects.all()
+
 
 class EstadisticaCampanaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = EstadisticaCampana.objects.all()
     serializer_class = EstadisticaCampanaSerializer
+
 
 # Vista para importar datos desde CSV
 class ImportarDatosView(APIView):
@@ -172,7 +199,7 @@ class ImportarDatosView(APIView):
         return Response({'message': 'Datos importados con éxito'})
 
 
-#                                               INTEGRACION G CALENDAR
+# INTEGRACION G CALENDAR
 
 class CalendarView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
@@ -192,23 +219,23 @@ class CalendarView(viewsets.ViewSet):
 
 def fetch_events(request):
     try:
-        # Authenticate with Google Calendar API
+        # Autenticacion con api Google Calendar
         creds = Credentials.from_authorized_user_file(
             'token.json')  # Path to your token file
         if creds.expired and creds.refresh_token:
             creds.refresh(Request())
 
-        # Build Google Calendar API service
+        # Creacion del servicio de la api
         service = build('calendar', 'v3', credentials=creds)
 
-        # Retrieve events from Google Calendar
+        # Extraer eventos de Google Calendar
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
         events_result = service.events().list(
             calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
             orderBy='startTime').execute()
         events_data = events_result.get('items', [])
 
-        # Save events to the database
+        # Guardar eventos en la base de datos
         for event_data in events_data:
             start_time = event_data['start'].get(
                 'dateTime', event_data['start'].get('date'))
@@ -216,14 +243,13 @@ def fetch_events(request):
                 'dateTime', event_data['end'].get('date'))
             start_time = datetime.datetime.fromisoformat(start_time)
             end_time = datetime.datetime.fromisoformat(end_time)
-            # Save event to the database
             Event.objects.create(
                 summary=event_data.get('summary', ''),
                 start_time=start_time,
                 end_time=end_time
             )
 
-        # Retrieve events from the database and display
+        #Extraer y mostrar eventos desde la base de datos.
         events = Event.objects.all()
         context = {'events': events}
         return render(request, 'calendar_integration/calendar_events.html', context)
