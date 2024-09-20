@@ -71,7 +71,14 @@ class TareaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Tarea no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
 class CampanaViewSet(viewsets.ModelViewSet):
-  pass
+
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Campana.objects.all()
+    serializer_class = CampanaSerializer
+
+    def create(self, request, *args, **kwargs):
+      pass
+    
 # CampanaCrearViewSet with Swagger Documentation
 class CampanaCrearViewSet(APIView):
 
@@ -86,6 +93,7 @@ class CampanaCrearViewSet(APIView):
         responses={201: 'Campaña creada', 400: 'Error al crear la campaña'}
     )
     def post(self, request):
+
         campana_service = CampanaService()
         data = request.data
         try:
@@ -94,6 +102,7 @@ class CampanaCrearViewSet(APIView):
         except Exception as e:
 
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)       
+     
 
 # CampanaEstadisticaViewSet with Swagger Documentation
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
@@ -203,7 +212,7 @@ class ImportarDatosView(APIView):
 
 class CalendarView(viewsets.ViewSet):
     permission_classes = [IsAuthenticated]
-
+    
     def list(self, request):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)

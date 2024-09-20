@@ -2,6 +2,7 @@ from django.db import models
 from ..repositories import ClienteRepository
 from cryptography.fernet import Fernet
 
+
 class ClienteService:
     #Crea un nuevo cliente, cifrando los datos sensibles.
     def crear_cliente(self, data):

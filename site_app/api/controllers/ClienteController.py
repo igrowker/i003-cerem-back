@@ -2,7 +2,6 @@ from rest_framework import viewsets, permissions
 from ..models import Cliente
 from ..serializers import ClienteSerializer
 from ..services import ClienteService
-
 from rest_framework.response import Response
 
 

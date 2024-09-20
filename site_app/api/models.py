@@ -129,6 +129,7 @@ class Event(models.Model):
     summary = models.CharField(max_length=255)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
     def __str__(self):
         return self.summary
 
@@ -139,3 +140,4 @@ class AuditLog(models.Model):
     data_before = models.JSONField(null=True, blank=True)
     data_after = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+

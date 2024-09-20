@@ -3,6 +3,7 @@ from .models import Tarea, Campana, Cliente, EstadisticaCampana, Event
 from cryptography import fernet
 
 
+
 # Serializador para el modelo Tarea.
 class TareaSerializer(serializers.ModelSerializer):
     class Meta:

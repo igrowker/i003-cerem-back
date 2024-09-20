@@ -51,7 +51,7 @@ AUTHENTICATION_BACKENDS = [
     # Django's ModelBackend for normal users
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication backend
-    'allauth.account.auth_backends.AuthenticationBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
 
@@ -65,8 +65,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Asegúrate de que esté aquí
-
     'allauth.account.middleware.AccountMiddleware',
 ]
 

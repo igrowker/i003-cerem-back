@@ -54,3 +54,7 @@ typing_extensions==4.12.2
 tzdata==2024.1
 uritemplate==4.1.1
 urllib3==2.2.3
+Django>=3.2,<4.0
+python-dotenv
+djangorestframework
+
