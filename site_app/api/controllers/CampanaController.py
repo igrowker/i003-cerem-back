@@ -3,9 +3,9 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from models import Campana
-from serializers import CampanaSerializer
-from services import CampanaService
+from ..models import Campana
+from ..serializers import CampanaSerializer
+from ..services import CampanaService
 from transformers import pipeline
 
 class CampanaViewSet(viewsets.ModelViewSet):

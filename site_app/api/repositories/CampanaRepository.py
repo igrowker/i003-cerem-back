@@ -1,5 +1,5 @@
 from datetime import timedelta
-from models import Campana, EstadisticaCampana
+from ..models import Campana, EstadisticaCampana
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request

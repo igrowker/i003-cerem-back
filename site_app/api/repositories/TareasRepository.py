@@ -1,5 +1,5 @@
 from django.db import models
-from models import Tarea
+from ..models import Tarea
 
 class TareasRepository:
     def __init__(self):
