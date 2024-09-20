@@ -35,7 +35,7 @@ BASE_APPS = [
 
 THIRD_APPS = [
     'rest_framework',
-
+]
 INSTALLED_APPS = [
 
     'django.contrib.sites',
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'oauth2_provider',
+    'api'
 
 ]
 
@@ -55,7 +56,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
+INSTALLED_APPS = BASE_APPS + THIRD_APPS 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
