@@ -1,4 +1,4 @@
-from models import Cliente
+from ..models import Cliente
 
 class ClienteRepository:
     def crear_cliente(self, nombre, email, telefono, usuario):

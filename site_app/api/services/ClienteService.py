@@ -1,5 +1,5 @@
 from django.db import models
-from repositories import ClienteRepository
+from ..repositories import ClienteRepository
 
 class ClienteService:
     def crear_cliente(self, data):

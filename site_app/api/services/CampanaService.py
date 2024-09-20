@@ -1,8 +1,8 @@
 from grpc import Status
 from transformers import pipeline
-from models import Campana
-from serializers import CampanaSerializer
-from repositories import CampanaRepository  # Importar el repositorio
+from ..models import Campana
+from ..serializers import CampanaSerializer
+from ..repositories import CampanaRepository  # Importar el repositorio
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import Flow
 from google.auth.transport.requests import Request
