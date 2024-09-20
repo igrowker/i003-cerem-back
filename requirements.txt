@@ -9,6 +9,7 @@ djangorestframework==3.15.2
 filelock==3.16.0
 fsspec==2024.9.0
 google-api-core==2.19.2
+django-allauth
 google-api-python-client==2.145.0
 google-auth==2.34.0
 google-auth-httplib2==0.2.0
