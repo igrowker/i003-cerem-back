@@ -32,3 +32,4 @@ pip install -r requirements.txt
 ```
 ### 3. Run the server
 	python3 site_app/manage.py runserver
+	python3 site_app/manage.py runserver
