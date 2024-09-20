@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-
+from cryptography.fernet import Fernet
 #Gestor Usuarios Personalizados. 
 class UserManager(BaseUserManager):
 
@@ -23,6 +23,24 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, name, password=None, **extra_fields):
         return self._create_user(email, name, password, True, **extra_fields)
 
+    def save(self, *args, **kwargs):
+        # Generar una clave única para este cliente (si no existe)
+        if not self.pk:
+            key = Fernet.generate_key()
+            self.key = key
+        else:
+            key = self.key
+
+        # Cifrar el email y el teléfono
+        f = Fernet(key)
+        self.email_encriptado = f.encrypt(self.email.encode('utf-8'))
+        self.telefono_encriptado = f.encrypt(self.telefono.encode('utf-8'))
+
+        # Eliminar los campos originales
+        del self.email
+        del self.telefono
+
+        super().save(*args, **kwargs)
 
 class Usuario(AbstractBaseUser):
     class Meta:

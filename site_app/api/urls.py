@@ -44,6 +44,8 @@ urlpatterns = [
     path('fetch-events/', views.fetch_events, name='fetch_events'),
 
     # Incluye las rutas generadas por el router
-    path('', include(router.urls)),  
+    path('', include(router.urls)),
+    
+    path('accounts/', include('allauth.urls')),  
    
 ]
