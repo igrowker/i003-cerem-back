@@ -33,6 +33,8 @@ urlpatterns = [
     path('', include('api.calendar_integration.urls')),
 
     # Incluye las rutas generadas por el router
-    path('', include(router.urls)),  
+    path('', include(router.urls)),
+    
+    path('accounts/', include('allauth.urls')),  
    
 ]
