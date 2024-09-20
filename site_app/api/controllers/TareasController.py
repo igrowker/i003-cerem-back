@@ -4,6 +4,7 @@ from ..models import Tarea
 from ..serializers import TareaSerializer
 from ..services import TareaService
 
+
 class TareaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Tarea.objects.all()
