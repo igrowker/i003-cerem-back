@@ -14,9 +14,9 @@ class TestCampanaService(TestCase):
     def test_crear_campana_exitosa(self):
         # Datos para la creación de la campaña
         datos_campana = {
-            "nombre": "Campaña de Prueba",
-            "descripcion": "Descripción de prueba",
-            "usuario": self.usuario
+            'nombre': 'Campaña de Prueba',
+            'descripcion': 'Descripción de la campaña',
+            'usuario': self.usuario
         }
 
         # Crear la campaña
