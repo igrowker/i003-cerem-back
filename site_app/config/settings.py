@@ -44,8 +44,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'oauth2_provider',
-    'api'
-
+    'api',
 ]
 
 AUTHENTICATION_BACKENDS = [
