@@ -7,16 +7,16 @@ class TestCampanaService(TestCase):
         # Crear un usuario para asociar con las campañas
         self.usuario = Usuario.objects.create_user(
             email="user@prueba.com",
-            name="Usuario de prueba",
+            nombre="Usuario de prueba",  # Cambié 'name' por 'nombre'
             password="password123"
         )
 
     def test_crear_campana_exitosa(self):
         # Datos para la creación de la campaña
         datos_campana = {
-            "nombre": "Campaña de Prueba",
-            "descripcion": "Descripción de prueba",
-            "usuario": self.usuario
+            'nombre': 'Campaña de Prueba',
+            'descripcion': 'Descripción de la campaña',
+            'usuario': self.usuario
         }
 
         # Crear la campaña
@@ -77,7 +77,7 @@ class TestClienteService(TestCase):
         # Crear un usuario para asociar con los clientes
         self.usuario = Usuario.objects.create_user(
             email="user@prueba.com",
-            name="Usuario de prueba",
+            nombre="Usuario de prueba",  # Cambié 'name' por 'nombre'
             password="password123"
         )
 

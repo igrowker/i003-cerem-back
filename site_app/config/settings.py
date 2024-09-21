@@ -117,15 +117,19 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # BASE DE DATOS: POSTGRESQL
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # El nombre de la base de datos en Supabase
-        'USER': 'postgres.zpipmvsqazynfzoggdzd',  # El usuario de la base de datos en Supabase
-        'PASSWORD': 'YJjZ8EGQPqXUtfI8',  # La contraseña que definiste
-        'HOST': 'aws-0-sa-east-1.pooler.supabase.com',  # Por ejemplo, db.xyz.supabase.co
-        'PORT': '6543',  # Puerto para PostgreSQL
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",  # Asegúrate de que este sea el nombre correcto
+        "USER": "postgres.zpipmvsqazynfzoggdzd",
+        "PASSWORD": "YJjZ8EGQPqXUtfI8",
+        "HOST": "aws-0-sa-east-1.pooler.supabase.com",
+        "PORT": "6543",
+        "TEST": {
+            "NAME": "test_postgres_v2",  #
+        },
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
