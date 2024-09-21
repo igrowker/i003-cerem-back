@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-
 # Cargar variables de entorno .env
 load_dotenv()
 
@@ -35,9 +34,6 @@ BASE_APPS = [
 
 THIRD_APPS = [
     'rest_framework',
-]
-INSTALLED_APPS = [
-
     'django.contrib.sites',
     'allauth',
     'allauth.account',

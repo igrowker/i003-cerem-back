@@ -1,5 +1,5 @@
 from django.test import TestCase
-from site_app.models import Campana, Cliente, Usuario
+from api.models import Campana, Cliente, Usuario
 
 class TestCampanaService(TestCase):
 
