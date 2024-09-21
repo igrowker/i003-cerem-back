@@ -7,7 +7,7 @@ class TestCampanaService(TestCase):
         # Crear un usuario para asociar con las campañas
         self.usuario = Usuario.objects.create_user(
             email="user@prueba.com",
-            name="Usuario de prueba",
+            nombre="Usuario de prueba",
             password="password123"
         )
 
@@ -48,11 +48,9 @@ class TestCampanaService(TestCase):
     def test_crear_campana_datos_invalidos(self):
         # Intentar crear una campaña sin nombre (dato obligatorio)
         with self.assertRaises(ValueError):
-            Campana.objects.create(
-                nombre="",  # Dato inválido
-                descripcion="Descripción de prueba",
-                usuario=self.usuario
-            )
+            campana = Campana(nombre="", descripcion="Descripción de prueba", usuario=self.usuario)
+            campana.clean()  # Llamar al método clean para que se ejecute la validación
+            campana.save()
 
     def test_fallo_integracion_ia(self):
         # Simular un fallo en la integración con IA
@@ -77,7 +75,7 @@ class TestClienteService(TestCase):
         # Crear un usuario para asociar con los clientes
         self.usuario = Usuario.objects.create_user(
             email="user@prueba.com",
-            name="Usuario de prueba",
+            nombre="Usuario de prueba",
             password="password123"
         )
 
@@ -136,11 +134,9 @@ class TestClienteService(TestCase):
     def test_fallo_creacion_cliente_datos_invalidos(self):
         # Intentar crear un cliente sin nombre
         with self.assertRaises(ValueError):
-            Cliente.objects.create(
-                nombre="",  # Dato inválido
-                email="cliente@prueba.com",
-                usuario=self.usuario
-            )
+            cliente = Cliente(nombre="", email="cliente@prueba.com", telefono="123456789", usuario=self.usuario)
+            cliente.clean()  # Llamar al método clean para que se ejecute la validación
+            cliente.save()
 
     def test_fallo_consulta_cliente_inexistente(self):
         # Intentar consultar un cliente que no existe
