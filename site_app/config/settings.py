@@ -174,3 +174,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Selected USER
 AUTH_USER_MODEL = "api.Usuario"
+
+ROOT_URLCONF = 'config.urls'
