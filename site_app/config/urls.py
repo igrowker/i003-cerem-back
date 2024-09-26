@@ -18,13 +18,13 @@ from django.urls import path, include
 from rest_framework import routers
 from api.views import view
 
+
 # Routers para las vistas de la API
 router = routers.DefaultRouter()
 router.register(r'tareas', view.TareaViewSet, basename='tareas')
 router.register(r'campanas', view.CampanaViewSet, basename='campanas')
 router.register(r'clientes', view.ClienteViewSet, basename='clientes')
 router.register(r'estadisticas-campanas', view.EstadisticaCampanaViewSet, basename='estadisticas-campanas')
-router.register(r'eventos', view.CalendarView, basename='eventos')
 
 # URLs para la API
 urlpatterns = [
@@ -33,5 +33,5 @@ urlpatterns = [
     path('campanas/<int:pk>/estadisticas/', view.CampanaEstadisticaViewSet.as_view({'get': 'estadisticas'}), name='campana-estadisticas'),
     path('importar-datos/', view.ImportarDatosView.as_view(), name='importar-datos'),
     path('swagger/', view.schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('fetch-events/', view.fetch_events, name='fetch-events'),
+    path('fetch-events/', view.fetch_events_view, name='fetch-events'),
 ]
