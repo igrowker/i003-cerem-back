@@ -76,7 +76,7 @@ class TareaViewSet(viewsets.ModelViewSet):
 
     # Inyectamos el repositorio de tareas en el constructor
     def __init__(self, *args, **kwargs):
-        self.tareas_repo = TareasRepository()
+        self.tareas_repo = TareasRepository.TareasRepository()
         super().__init__(*args, **kwargs)
 
     @swagger_auto_schema(
@@ -142,8 +142,8 @@ class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):
 
     # Inyectamos los repositorios de campañas y estadísticas en el constructor
     def __init__(self, *args, **kwargs):
-        self.campanas_repo = CampanaRepository()
-        self.estadisticas_repo = EstadisticasRepository()
+        self.campanas_repo = CampanaRepository.CampanaRepository()
+        self.estadisticas_repo = EstadisticasRepository.EstadisticasRepository()
         super().__init__(*args, **kwargs)
 
     @swagger_auto_schema(
@@ -174,7 +174,7 @@ class EstadisticaCampanaViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = EstadisticaCampana.objects.all()
     serializer_class = EstadisticaCampanaSerializer
     def __init__(self, *args, **kwargs):
-       self.estadisticas_repo = EstadisticasRepository() # Inyecta el repositorio
+       self.estadisticas_repo = EstadisticasRepository.EstadisticasRepository() # Inyecta el repositorio
        super().__init__(*args, **kwargs)
     def get_object(self):
         campana_id = self.kwargs['pk']
