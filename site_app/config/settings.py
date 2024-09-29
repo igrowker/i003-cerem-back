@@ -41,6 +41,7 @@ THIRD_APPS = [
     'allauth.socialaccount.providers.google',
     'oauth2_provider',
     'api',
+    'drf_yasg',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -176,3 +177,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "api.Usuario"
 
 ROOT_URLCONF = 'config.urls'
+SWAGGER_SETTINGS = {
+    'DEFAULTS': {
+        'USE_SESSION_AUTH': False,
+        'SECURITY_DEFINITIONS': {
+            'Bearer': {
+                'type': 'apiKey',
+                'in': 'header',
+                'name': 'Authorization'
+            }
+        }
+    }
+}
