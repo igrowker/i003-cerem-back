@@ -95,45 +95,29 @@ class TareaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Tarea no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
 class CampanaViewSet(viewsets.ModelViewSet):
-
     permission_classes = [permissions.IsAuthenticated]
     queryset = Campana.objects.all()
     serializer_class = CampanaSerializer
 
     def create(self, request, *args, **kwargs):
-      pass
-    
-# CampanaCrearViewSet with Swagger Documentation
-class CampanaCrearViewSet(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    queryset = Campana.objects.all()
-    serializer_class = CampanaSerializer
-    @swagger_auto_schema(
-        operation_summary="Crear una nueva campaña",
-        operation_description="Crea una nueva campaña con contenido generado automáticamente.",
-        request_body=CampanaSerializer,
-        responses={201: 'Campaña creada', 400: 'Error al crear la campaña'})
-
-    def create(self, request, *args, **kwargs):
-        campana_service = CampanaService()
+        campana_service = CampanaService.CampanaService()
         data = request.data
         try:
             serializer = campana_service.crear_campana_con_contenido(data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    
-    def post(self, request):
 
-        campana_service = CampanaService()
-        data = request.data
-        try:
-            serializer = campana_service.crear_campana_con_contenido(data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
+# CampanaCrearViewSet with Swagger Documentation
+from rest_framework import generics
 
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)       
-     
+class CampanaCrearViewSet(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Campana.objects.all()
+    serializer_class = CampanaSerializer
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 # CampanaEstadisticaViewSet with Swagger Documentation
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):

@@ -1,4 +1,4 @@
-from grpc import Status
+from rest_framework import status
 from transformers import pipeline
 from ..models import Campana
 from ..serializers import CampanaSerializer
@@ -13,7 +13,7 @@ import logging
 class CampanaService:
     def __init__(self):
         self.generador_texto = pipeline("text-generation", model="facebook/bart-large-cnn")
-        self.campana_repository = CampanaRepository() 
+        self.campana_repository = CampanaRepository.CampanaRepository() 
 
     def crear_campana_con_contenido(self, data):
         serializer = CampanaSerializer(data=data)
@@ -31,8 +31,8 @@ class CampanaService:
             campana.contenido = contenido
             self.campana_repository.update(campana.id, {'contenido': contenido})  
 
-            return serializer, Status.HTTP_201_CREATED, {"message": "Campaña creada con éxito."}
+            return serializer, status.HTTP_201_CREATED, {"message": "Campaña creada con éxito."}
 
         except Exception as e:
             logging.error(f"Error al generar contenido para la campaña {campana.id}: {str(e)}")
-            return serializer, Status.HTTP_500_INTERNAL_SERVER_ERROR, {"error": "Error al generar el contenido de la campaña"}
+            return serializer, status.HTTP_500_INTERNAL_SERVER_ERROR, {"error": "Error al generar el contenido de la campaña"}
