@@ -1,16 +1,16 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from api.services.EstadisticasService import EstadisticaCampanaService
+from api.services.Estadisticas import EstadisticasRepository
+
 
 #Controlador que maneja los endpoints relacionados con las estadisticas de campaña
 
 class EstadisticasCampanaViewSet(APIView):
-    estadisticas_service = EstadisticaCampanaService()
+    estadisticas_service = EstadisticasRepository()
 
     def get(self, request, campana_id):
-        # Obtener las estadisticas de una campaña especifica
-        estadisticas = self.estadisticas_service.obtener_estadisticas(campana_id)
+        estadisticas = self.estadisticas_service.obtener_estadisticas_por_campana(campana_id)  # Cambia el nombre del método
         if estadisticas:
             data = {
                 "tasa_apertura": estadisticas.tasa_apertura,
