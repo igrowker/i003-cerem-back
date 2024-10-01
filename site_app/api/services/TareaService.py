@@ -1,4 +1,4 @@
-from models import Tarea
+from api.models import Tarea
 from repositories import TareaRepository
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials

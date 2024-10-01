@@ -20,16 +20,18 @@ class CampanaSerializer(serializers.ModelSerializer):
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
-        fields = '__all__' 
-        
+        fields = '__all__'  # Incluir todos los campos del modelo Cliente.
+
     def to_representation(self, instance):
         data = super().to_representation(instance)
         # Descifrar los datos antes de devolverlos (si es necesario)
-        key = instance.key
-        f = fernet(key)
-        data['email'] = f.decrypt(instance.email_encriptado).decode('utf-8')
-        data['telefono'] = f.decrypt(instance.telefono_encriptado).decode('utf-8')
-        return data # Incluir todos los campos del modelo Cliente.
+        # Asegúrate de que el atributo key exista en el modelo Cliente
+        if hasattr(instance, 'key'):
+            key = instance.key
+            f = fernet(key)
+            data['email'] = f.decrypt(instance.email_encriptado).decode('utf-8')
+            data['telefono'] = f.decrypt(instance.telefono_encriptado).decode('utf-8')
+        return data
 
 # Serializador para el modelo EstadisticaCampana.
 class EstadisticaCampanaSerializer(serializers.ModelSerializer):

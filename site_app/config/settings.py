@@ -37,10 +37,7 @@ THIRD_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'oauth2_provider',
-]
 
-LOCAL_APPS = [
-    'api',
 ]
 
 # Combina todas las aplicaciones en una sola lista
@@ -50,6 +47,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+
+INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -144,3 +144,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Selected USER
 AUTH_USER_MODEL = "api.Usuario"
+
+ROOT_URLCONF = 'config.urls'
+SWAGGER_SETTINGS = {
+    'DEFAULTS': {
+        'USE_SESSION_AUTH': False,
+        'SECURITY_DEFINITIONS': {
+            'Bearer': {
+                'type': 'apiKey',
+                'in': 'header',
+                'name': 'Authorization'
+            }
+        }
+    }
+}
