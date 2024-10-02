@@ -4,9 +4,12 @@ from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
 from api.controllers.ClienteController import ClienteViewSet
 from api.controllers.CampanaController import CampanaViewSet
 from api import views
-from .view.views import TareaViewSet, CampanaViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleView
+from .views.view import TareaViewSet, CampanaViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleCalendarView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
+
+from .views import UsuarioViewSet  # Asegúrate de ajustar la ruta según tu estructura
 
 # Creamos un router para manejar las URLs de los ViewSets
 router = routers.DefaultRouter()
