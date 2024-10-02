@@ -14,12 +14,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+from api.views import view
+from .swagger import schema_view
 
+# Routers para las vistas de la API
+router = routers.DefaultRouter()
+router.register(r'tareas', view.TareaViewSet, basename='tareas')
+router.register(r'campanas', view.CampanaViewSet, basename='campanas')
+router.register(r'clientes', view.ClienteViewSet, basename='clientes')
+router.register(r'estadisticas-campanas', view.EstadisticaCampanaViewSet, basename='estadisticas-campanas')
+
+# URLs para la API
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path('accounts/', include('allauth.urls')),
-    path('', include('api.calendar_integration.urls')),
+    path('', include(router.urls)),
+    path('campanas/crear/', view.CampanaCrearViewSet.as_view(), name='campana-crear'),
+    path('campanas/<int:pk>/estadisticas/', view.CampanaEstadisticaViewSet.as_view({'get': 'estadisticas'}), name='campana-estadisticas'),
+    path('importar-datos/', view.ImportarDatosView.as_view(), name='importar-datos'),
+    path('swagger/', view.schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('fetch-events/', view.fetch_events_view, name='fetch-events'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+
 ]

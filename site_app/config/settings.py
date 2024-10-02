@@ -2,7 +2,6 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-
 # Cargar variables de entorno .env
 load_dotenv()
 
@@ -35,16 +34,14 @@ BASE_APPS = [
 
 THIRD_APPS = [
     'rest_framework',
-
-INSTALLED_APPS = [
-
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'oauth2_provider',
-
+    'api',
+    'drf_yasg',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -55,7 +52,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
-INSTALLED_APPS = BASE_APPS + THIRD_APPS + LOCAL_APPS
+INSTALLED_APPS = BASE_APPS + THIRD_APPS 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -178,3 +175,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Selected USER
 AUTH_USER_MODEL = "api.Usuario"
+
+ROOT_URLCONF = 'config.urls'
+SWAGGER_SETTINGS = {
+    'DEFAULTS': {
+        'USE_SESSION_AUTH': False,
+        'SECURITY_DEFINITIONS': {
+            'Bearer': {
+                'type': 'apiKey',
+                'in': 'header',
+                'name': 'Authorization'
+            }
+        }
+    }
+}

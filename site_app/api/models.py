@@ -1,13 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from cryptography.fernet import Fernet
-#Gestor Usuarios Personalizados. 
-class UserManager(BaseUserManager):
 
-    def _create_user(self, email, name, password, is_staff, is_superuser, **extra_fields):
+# Gestor Usuarios Personalizados. 
+class UserManager(BaseUserManager):
+    def _create_user(self, email, nombre, password, is_staff=False, is_superuser=False, **extra_fields):
         user = self.model(
             email=email,
-            name=name,
+            nombre=nombre,
             is_staff=is_staff,
             **extra_fields
         )
@@ -15,13 +15,15 @@ class UserManager(BaseUserManager):
         user.save(using=self.db)
         return user
     
-    #Crea User
-    def create_user(self, email, name, password=None, **extra_fields):
-        return self._create_user(email, name, password, False, **extra_fields)
-
-    #Crea Super User
-    def create_superuser(self, email, name, password=None, **extra_fields):
-        return self._create_user(email, name, password, True, **extra_fields)
+    # Crea User
+    def create_user(self, email, nombre, password=None, **extra_fields):
+        if not nombre:
+            raise ValueError("Nombre is required")
+        return self._create_user(email, nombre, password, False, **extra_fields)
+    
+    # Crea Super User
+    def create_superuser(self, email, nombre, password=None, **extra_fields):
+        return self._create_user(email, nombre, password, True, **extra_fields)
 
     def save(self, *args, **kwargs):
         # Generar una clave única para este cliente (si no existe)
@@ -61,7 +63,7 @@ class Usuario(AbstractBaseUser):
         return f"Usuario {self.id}. {self.email}"
     
 
-#Clientes asociados a un User
+# Clientes asociados a un User
 class Cliente(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
@@ -73,8 +75,12 @@ class Cliente(models.Model):
     class Meta:
         db_table = 'clientes'
 
+    def clean(self):
+        if not self.nombre:
+            raise ValueError("Nombre is required")
 
-#Tareas asignadas a User
+
+# Tareas asignadas a User
 class Tarea(models.Model):
     id = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=255)
@@ -86,13 +92,13 @@ class Tarea(models.Model):
         db_table = 'tareas'
 
 
-#Campana gestionadas por User
+# Campana gestionadas por User
 class Campana(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
     rendimiento = models.OneToOneField(
         'EstadisticaCampana', 
         on_delete=models.CASCADE, 
@@ -102,19 +108,22 @@ class Campana(models.Model):
     )
     clics_totales = models.IntegerField(default=0)
     conversiones_totales = models.IntegerField(default=0)
-    # Campos para almacenar información relacionada con Google Calendar y Keep (opcional)
     google_calendar_event_id = models.CharField(max_length=255, null=True, blank=True)
     google_keep_note_id = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'campanas'
 
+    def clean(self):
+        if not self.nombre:
+            raise ValueError("Nombre is required")
 
-#Estadisticas de la campana
+
+# Estadisticas de la campana
 class EstadisticaCampana(models.Model):
     id = models.AutoField(primary_key=True)
     campana = models.ForeignKey(
-        Campana, on_delete=models.CASCADE, related_name='estadisticas'
+        'Campana', on_delete=models.CASCADE, related_name='estadisticas'
     )
     tasa_apertura = models.FloatField()
     tasa_conversion = models.FloatField()
@@ -140,4 +149,3 @@ class AuditLog(models.Model):
     data_before = models.JSONField(null=True, blank=True)
     data_after = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
