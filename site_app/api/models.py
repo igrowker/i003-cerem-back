@@ -98,7 +98,7 @@ class Campana(models.Model):
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
     rendimiento = models.OneToOneField(
         'EstadisticaCampana', 
         on_delete=models.CASCADE, 
@@ -108,7 +108,6 @@ class Campana(models.Model):
     )
     clics_totales = models.IntegerField(default=0)
     conversiones_totales = models.IntegerField(default=0)
-    # Campos para almacenar información relacionada con Google Calendar y Keep (opcional)
     google_calendar_event_id = models.CharField(max_length=255, null=True, blank=True)
     google_keep_note_id = models.CharField(max_length=255, null=True, blank=True)
 
@@ -124,7 +123,7 @@ class Campana(models.Model):
 class EstadisticaCampana(models.Model):
     id = models.AutoField(primary_key=True)
     campana = models.ForeignKey(
-        Campana, on_delete=models.CASCADE, related_name='estadisticas'
+        'Campana', on_delete=models.CASCADE, related_name='estadisticas'
     )
     tasa_apertura = models.FloatField()
     tasa_conversion = models.FloatField()

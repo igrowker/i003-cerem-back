@@ -1,12 +1,15 @@
-from rest_framework import viewsets, permissions,status
+from rest_framework import viewsets, permissions
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db import IntegrityError
+from rest_framework import generics
 
 import csv
 from ..services import EstadisticasService,CampanaService,ClienteService,google_calendarService 
+from ..services.CampanaService import CampanaService
 from ..models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario, Event
 from ..serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer, EventSerializer
 from ..repositories import TareasRepository,CampanaRepository,ClienteRepository,EstadisticasRepository
@@ -100,24 +103,28 @@ class CampanaViewSet(viewsets.ModelViewSet):
     serializer_class = CampanaSerializer
 
     def create(self, request, *args, **kwargs):
-        campana_service = CampanaService.CampanaService()
+        campana_service = CampanaService()
         data = request.data
         try:
-            serializer = campana_service.crear_campana_con_contenido(data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer, status_code, response_data = campana_service.crear_campana_con_contenido(data)
+            if status_code == status.HTTP_201_CREATED:
+                return Response(serializer.data, status=status_code)
+            else:
+                return Response(response_data, status=status_code)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # CampanaCrearViewSet with Swagger Documentation
-from rest_framework import generics
-
 class CampanaCrearViewSet(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Campana.objects.all()
     serializer_class = CampanaSerializer
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        try:
+            return self.create(request, *args, **kwargs)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # CampanaEstadisticaViewSet with Swagger Documentation
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):

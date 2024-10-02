@@ -12,10 +12,14 @@ class TareaSerializer(serializers.ModelSerializer):
 
 # Serializador para el modelo Campana.
 class CampanaSerializer(serializers.ModelSerializer):
+    fecha_creacion = serializers.DateField(format="%d/%m/%Y", input_formats=["%d/%m/%Y"])
+
     class Meta:
         model = Campana
-        fields = '__all__'  # Incluir todos los campos del modelo Campana.
-
+        fields = '__all__'
+        extra_kwargs = {
+            'rendimiento': {'required': False}
+        }
 # Serializador para el modelo Cliente.
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
