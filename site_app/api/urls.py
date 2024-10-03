@@ -3,13 +3,12 @@ from rest_framework import routers,permissions
 from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
 from api.controllers.ClienteController import ClienteViewSet
 from api.controllers.CampanaController import CampanaViewSet
+from api.controllers.UsuarioController import UsuarioViewSet
 from api import views
-from .views.view import TareaViewSet, CampanaViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleCalendarView
+from .views.view import TareaViewSet, CampanaViewSet,CampanaCrearViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleCalendarView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-
-from .views import UsuarioViewSet  # Asegúrate de ajustar la ruta según tu estructura
 
 # Creamos un router para manejar las URLs de los ViewSets
 router = routers.DefaultRouter()
@@ -34,7 +33,7 @@ schema_view = get_schema_view(
    permission_classes=[permissions.AllowAny],
 )
 
-urlpatterns = [ EstadisticasCampanaDetailView,
+urlpatterns = [
     # Permite importar datos de clientes desde un archivo CSV o similar.
     path('datos/importar/', ImportarDatosView.as_view(), name='importar_datos'),
     
@@ -44,14 +43,12 @@ urlpatterns = [ EstadisticasCampanaDetailView,
 
     # Incluye las rutas generadas por el router
     path('', include(router.urls)),
-    path('', include(router.urls)),
-    
+   
     path('accounts/', include('allauth.urls')),  
     path('api/tareas/', TareaGoogleCalendarView.as_view(), name='tarea-google-calendar-list'),
-    path('api/estadisticas/campana/<int:pk>/', .as_view(), name='estadisticas-campana-detail'),
     path('api/estadisticas/campana/<int:pk>/', EstadisticasCampanaViewSet.as_view(), name='estadisticas-campana-detail'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('', include(router.urls)),
     path('campanas/crear/', CampanaCrearViewSet.as_view(), name='campana_crear'),
-    ]
+]

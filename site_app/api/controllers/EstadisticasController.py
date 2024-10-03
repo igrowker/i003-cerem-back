@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from api.services.Estadisticas import EstadisticasRepository
+from site_app.api.services.EstadisticasService import EstadisticasRepository
 
 
 #Controlador que maneja los endpoints relacionados con las estadisticas de campaña
