@@ -236,5 +236,5 @@ class ImportarDatosView(APIView):
 # INTEGRACION G CALENDAR
 
 def fetch_events_view(request):
-    calendar_service = GoogleCalendarService()
+    calendar_service = google_calendarService ()
     events = calendar_service.fetch_events()

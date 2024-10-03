@@ -1,4 +1,4 @@
-    cofrom datetime import timedelta
+from datetime import timedelta
 from ..models import Campana, EstadisticaCampana
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
