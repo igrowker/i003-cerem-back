@@ -1,4 +1,4 @@
-from grpc import Status
+from grpc import status
 from rest_framework import viewsets, permissions,Response
 from ..models import Tarea
 from ..serializers import TareaSerializer
@@ -18,7 +18,7 @@ class TareaViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         tarea = self.tarea_service.crear_tarea(serializer.validated_data)  # Utiliza el servicio para crear la tarea
-        return Response(self.get_serializer(tarea).data, status=Status.HTTP_201_CREATED)
+        return Response(self.get_serializer(tarea).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -31,4 +31,4 @@ class TareaViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.tarea_service.eliminar_tarea(instance.id)  # Utiliza el servicio para eliminar la tarea
-        return Response(status=Status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

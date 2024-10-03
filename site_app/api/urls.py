@@ -18,6 +18,7 @@ router.register(r'clientes', ClienteViewSet)
 router.register(r'tareas', TareaViewSet) 
 router.register(r'calendar', CalendarView, basename='calendar')
 
+
 # Configuración de Swagger
 schema_view = get_schema_view(
    openapi.Info(
@@ -52,8 +53,5 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('', include(router.urls)),
     path('campanas/crear/', CampanaCrearViewSet.as_view(), name='campana_crear'),
-    path('campanas/', CampanaViewSet.as_view(), name='campana_list'),
-    
-
-
+   
 ]
