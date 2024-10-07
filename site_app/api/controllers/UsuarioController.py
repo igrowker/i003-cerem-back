@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import action  # Importar el decorador
 from ..models import Usuario
 from ..serializers import UsuarioSerializer
 
@@ -9,6 +10,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer  # Asocia el serializer correspondiente
     permission_classes = [IsAuthenticated]  # Requiere autenticación para acceder a estos endpoints
 
+    @action(detail=True, methods=['patch'], permission_classes=[IsAuthenticated])
     def update_password(self, request, pk=None):
         usuario = self.get_object()
         new_password = request.data.get('new_password')
