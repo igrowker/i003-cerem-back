@@ -1,9 +1,12 @@
 from rest_framework import status
 from transformers import pipeline
-from ..models import Campana, EstadisticaCampana
+from ..models import Campana, EstadisticaCampana, Usuario
 from ..serializers import CampanaSerializer
 from ..repositories.CampanaRepository import CampanaRepository  # Importa la clase
 import logging
+from datetime import timedelta
+from django.db import IntegrityError 
+from django.core.exceptions import ObjectDoesNotExist
 
 class CampanaService:
     def __init__(self):
@@ -17,31 +20,51 @@ class CampanaService:
 
     def crear_campana_con_contenido(self, data):
         serializer = CampanaSerializer(data=data)
-        
-        if not serializer.is_valid():
+
+        if serializer.is_valid():
+            usuario_id = data.get('usuario')
+
+            try:
+                usuario = Usuario.objects.get(pk=usuario_id)
+
+                campana = Campana(
+                    nombre=serializer.validated_data['nombre'],
+                    descripcion=serializer.validated_data['descripcion'],
+                    usuario=usuario,
+                    fecha_creacion=serializer.validated_data['fecha_creacion'],
+                    fecha_inicio=serializer.validated_data['fecha_inicio']
+                )
+
+                duracion_campana = 1
+                prompt = f"Generar contenido creativo y persuasivo para una campaña de marketing sobre {campana.nombre}. El tono debe ser {campana.descripcion} y la longitud máxima {duracion_campana} días."
+                contenido = self.generador_texto(prompt, max_new_tokens=30)[0]['generated_text']
+                campana.contenido = contenido
+                campana.save()
+
+                # Intenta obtener la EstadisticaCampana existente
+                estadistica = EstadisticaCampana.objects.filter(campana=campana). first()
+
+                if estadistica is None:
+                    # Crea una nueva EstadisticaCampana si no existe
+                    estadistica = EstadisticaCampana.objects.create(
+                        campana=campana,
+                        tasa_apertura=0.0,
+                        tasa_conversion=0.0,
+                        clicks=0
+                    )
+
+                # Asigna la EstadisticaCampana a la campaña
+                campana.rendimiento = estadistica
+                campana.save()
+
+                return serializer, status.HTTP_201_CREATED, {"message": "Campaña creada con éxito"}
+
+            except Usuario.DoesNotExist:
+                error_message = {"error": "El usuario proporcionado no existe."}
+                return serializer, status.HTTP_400_BAD_REQUEST, error_message
+            except Exception as e:
+                logging.error(f"Error al crear la campaña: {e}")
+                return serializer, status.HTTP_500_INTERNAL_SERVER_ERROR, {"error": str(e)}
+        else:
             logging.error(f"Error de validación al crear la campaña: {serializer.errors}")
             return serializer, status.HTTP_400_BAD_REQUEST, {"error": serializer.errors}
-
-        try:
-            campana = self.campana_repository.create(serializer.validated_data['nombre'], serializer.validated_data['descripcion'], serializer.validated_data['usuario'], serializer.validated_data['fecha_creacion'])
-
-            prompt = f"Generar contenido creativo y persuasivo para una campaña de marketing sobre {campana.nombre}. El tono debe ser {campana.descripcion} y la longitud máxima {campana.fecha_inicio} días."
-            contenido = self.generador_texto(prompt, max_length=campana.fecha_inicio.days)[0]['generated_text']
-
-            campana.contenido = contenido
-
-            # Crear una instancia de EstadisticaCampana y calcular el rendimiento
-            estadistica = EstadisticaCampana.objects.create(
-                campana=campana,
-                tasa_apertura=0.0,  # Valor predeterminado
-                tasa_conversion=0.0,  # Valor predeterminado
-                clicks=0  # Valor predeterminado
-            )
-            campana.rendimiento = self.calcular_rendimiento(estadistica)
-
-            self.campana_repository.actualizar_campana(campana, contenido=contenido, rendimiento=campana.rendimiento)
-
-            return serializer, status.HTTP_201_CREATED, {"message": "Campaña creada con éxito"}
-        except Exception as e:
-            logging.error(f"Error al crear la campaña: {e}")
-            return serializer, status.HTTP_500_INTERNAL_SERVER_ERROR, {"error": str(e)}

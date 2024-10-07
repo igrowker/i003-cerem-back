@@ -6,26 +6,28 @@ import os
 from google.oauth2 import service_account  # Importa la clase service_account
 
 class CampanaRepository:
-    def create(self, nombre, descripcion, usuario, fecha_creacion, nota_keep=None):
-        campana = Campana(nombre=nombre, descripcion=descripcion, usuario=usuario, fecha_creacion=fecha_creacion)
-        campana.save()
+    def create(self, nombre, descripcion, usuario, fecha_creacion, fecha_inicio, nota_keep=None):
+        campana = Campana(nombre=nombre, descripcion=descripcion, usuario=usuario, fecha_creacion=fecha_creacion,fecha_inicio=fecha_inicio)
 
         # Crear evento en Google Calendar
         event = {
             'summary': nombre,
             'description': descripcion,
             'start': {
-                'dateTime': fecha_creacion.isoformat(),
-                'timeZone': 'America/Argentina/Buenos_Aires'  # Ajusta la zona horaria según sea necesario
+                'dateTime': fecha_inicio.isoformat() + 'T00:00:00', 
+                'timeZone': 'America/Argentina/Buenos_Aires'
             },
             'end': {
-                'dateTime': (fecha_creacion + timedelta(days=1)).isoformat(),
+                'dateTime': (fecha_inicio + timedelta(days=1)).isoformat() + 'T00:00:00',
                 'timeZone': 'America/Argentina/Buenos_Aires'
             },
         }
+
+        print("Solicitud:", event)
+
         service_calendar = build('calendar', 'v3', credentials=self.get_credentials())
         event = service_calendar.events().insert(calendarId='primary', body=event).execute()
-        campana.google_calendar_event_id = event['id']
+        campana.google_calendar_event_id = event['id']  # Asigna el ID del evento
 
         # Crear nota en Google Keep
         if nota_keep:
@@ -36,11 +38,12 @@ class CampanaRepository:
             }
             service_keep = build('keep', 'v1', credentials=self.get_credentials())
             note = service_keep.notes().insert(body=note).execute()
-            campana.google_keep_note_id = note['id']
+            campana.google_keep_note_id = note['id']  # Asigna el ID de la nota
 
-        campana.save()
+        campana.save()  # Guarda la campaña una sola vez
 
-        return campana
+        return campana  # Retorna la instancia guardada
+
 
     def get_credentials(self):
         """
@@ -67,11 +70,12 @@ class CampanaRepository:
             query = query.filter(usuario=usuario)
         return query.filter(**kwargs)
 
-    def obtener_campana_por_id(self, campana_id):
+    def obtener_por_id(self, campana_id):
         try:
-            return Campana.objects.get(pk=campana_id)
+            campana = Campana.objects.get(pk=campana_id)
+            return campana
         except Campana.DoesNotExist:
-            return None
+            return None 
 
     def actualizar_campana(self, campana, **kwargs):
         for atributo, valor in kwargs.items():

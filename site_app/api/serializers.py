@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tarea, Campana, Cliente, EstadisticaCampana, Event
+from .models import Tarea, Campana, Cliente, EstadisticaCampana, Event, Usuario
 from cryptography import fernet
 
 
@@ -12,7 +12,13 @@ class TareaSerializer(serializers.ModelSerializer):
 
 # Serializador para el modelo Campana.
 class CampanaSerializer(serializers.ModelSerializer):
-    fecha_creacion = serializers.DateField(format="%d/%m/%Y", input_formats=["%d/%m/%Y"])
+    fecha_creacion = serializers.DateTimeField(format="%d/%m/%Y", input_formats=["%d/%m/%Y"])
+    fecha_inicio = serializers.DateTimeField(
+        input_formats=['%d/%m/%Y'], 
+        format=None,  
+        required=False,  
+    )
+    usuario = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Campana
@@ -48,3 +54,24 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['id', 'summary', 'start_time', 'end_time']
+
+
+
+
+
+
+class UsuarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario  # Indica que este serializer está asociado al modelo Usuario
+        fields = ['id', 'nombre', 'email', 'password', 'is_staff']  # Campos que se incluirán en el serializer
+        extra_kwargs = {
+            'password': {'write_only': True}  # El campo password será solo para escritura, no se incluirá en las respuestas
+        }
+
+    def create(self, validated_data):
+        # Sobrescribe el método create para manejar la creación de un nuevo usuario
+        usuario = Usuario(**validated_data)  # Crea una instancia de Usuario con los datos validados
+        usuario.set_password(validated_data['password'])  # Establece la contraseña de forma segura (encriptada)
+        usuario.save()  # Guarda la nueva instancia de usuario en la base de datos
+        return usuario  # Devuelve el usuario recién creado
+

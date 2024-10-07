@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from cryptography.fernet import Fernet
 
+
 # Gestor Usuarios Personalizados. 
 class UserManager(BaseUserManager):
     def _create_user(self, email, nombre, password, is_staff=False, is_superuser=False, **extra_fields):
@@ -70,7 +71,7 @@ class Cliente(models.Model):
     email = models.EmailField()
     telefono = models.CharField(max_length=20)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('api.Usuario', on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'clientes'
@@ -86,7 +87,7 @@ class Tarea(models.Model):
     descripcion = models.CharField(max_length=255)
     fecha = models.DateTimeField()
     estado = models.CharField(max_length=50)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usuario = models.ForeignKey('api.Usuario', on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'tareas'
@@ -98,9 +99,10 @@ class Campana(models.Model):
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
-    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    fecha_inicio = models.DateField(null=True, blank=True)
+    usuario = models.ForeignKey('api.Usuario', on_delete=models.CASCADE)
     rendimiento = models.OneToOneField(
-        'EstadisticaCampana', 
+        'api.EstadisticaCampana', 
         on_delete=models.CASCADE, 
         null=True, 
         blank=True, 
@@ -144,7 +146,7 @@ class Event(models.Model):
 
 class AuditLog(models.Model):
     campaign = models.ForeignKey(Campana, on_delete=models.CASCADE)
-    user = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    user = models.ForeignKey('api.Usuario', on_delete=models.CASCADE)
     action = models.CharField(max_length=50)
     data_before = models.JSONField(null=True, blank=True)
     data_after = models.JSONField(null=True, blank=True)

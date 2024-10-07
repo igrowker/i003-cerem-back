@@ -3,10 +3,12 @@ from rest_framework import routers,permissions
 from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
 from api.controllers.ClienteController import ClienteViewSet
 from api.controllers.CampanaController import CampanaViewSet
+from api.controllers.UsuarioController import UsuarioViewSet
 from api import views
-from .view.views import TareaViewSet, CampanaViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleView
+from .views.view import TareaViewSet, CampanaViewSet,CampanaCrearViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleCalendarView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
 
 # Creamos un router para manejar las URLs de los ViewSets
 router = routers.DefaultRouter()
@@ -14,6 +16,7 @@ router.register(r'campanas', CampanaViewSet)
 router.register(r'clientes', ClienteViewSet) 
 router.register(r'tareas', TareaViewSet) 
 router.register(r'calendar', CalendarView, basename='calendar')
+router.register(r'usuarios', UsuarioViewSet)  # Esto crea los endpoints CRUD para Usuario
 
 
 # Configuración de Swagger
@@ -31,7 +34,6 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-        
     # Permite importar datos de clientes desde un archivo CSV o similar.
     path('datos/importar/', ImportarDatosView.as_view(), name='importar_datos'),
     
@@ -41,14 +43,12 @@ urlpatterns = [
 
     # Incluye las rutas generadas por el router
     path('', include(router.urls)),
-    
+   
     path('accounts/', include('allauth.urls')),  
     path('api/tareas/', TareaGoogleCalendarView.as_view(), name='tarea-google-calendar-list'),
-    path('api/estadisticas/campana/<int:pk>/', EstadisticasCampanaDetailView.as_view(), name='estadisticas-campana-detail'),
-    path('api/estadisticas/campana/<int:pk>/', EstadisticasCampanaDetailView.as_view(), name='estadisticas-campana-detail'),
+    path('api/estadisticas/campana/<int:pk>/', EstadisticasCampanaViewSet.as_view(), name='estadisticas-campana-detail'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('', include(router.urls)),
     path('campanas/crear/', CampanaCrearViewSet.as_view(), name='campana_crear'),
-   
 ]

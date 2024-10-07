@@ -18,3 +18,15 @@ class EstadisticasRepository:
             clicks=clicks
         )
         return estadistica
+        from .models import EstadisticaCampana
+
+    def calcular_estadisticas(self, campana):
+        try:
+            estadistica = EstadisticaCampana.objects.get(campana=campana)
+            return {
+                'tasa_apertura': estadistica.tasa_apertura,
+                'tasa_conversion': estadistica.tasa_conversion,
+                'clicks': estadistica.clicks
+            }
+        except EstadisticaCampana.DoesNotExist:
+            return None
