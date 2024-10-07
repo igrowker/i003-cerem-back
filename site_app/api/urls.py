@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers,permissions
 from api.controllers.EstadisticasController import EstadisticasCampanaViewSet
+from rest_framework.routers import DefaultRouter
 from api.controllers.ClienteController import ClienteViewSet
 from api.controllers.CampanaController import CampanaViewSet
 from api.controllers.UsuarioController import UsuarioViewSet
@@ -32,6 +33,9 @@ schema_view = get_schema_view(
    public=True,
    permission_classes=[permissions.AllowAny],
 )
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet)
 
 urlpatterns = [
     # Permite importar datos de clientes desde un archivo CSV o similar.
