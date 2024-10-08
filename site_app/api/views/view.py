@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.db import IntegrityError
 from rest_framework import generics
 from django.shortcuts import get_object_or_404
@@ -238,3 +239,31 @@ class ImportarDatosView(APIView):
 def fetch_events_view(request):
     calendar_service = google_calendarService ()
     events = calendar_service.fetch_events()
+
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    @swagger_auto_schema(
+        operation_description="Obtener un token JWT",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'username': openapi.Schema(type=openapi.TYPE_STRING, description='Nombre de usuario o correo electrónico'),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, description='Contraseña'),
+            },
+        ),
+        responses={200: openapi.Response('Success', openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'refresh': openapi.Schema(type=openapi.TYPE_STRING, description='Token de refresco'),
+                'access': openapi.Schema(type=openapi.TYPE_STRING, description='Token de acceso'),
+            },
+        ))},
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    pass
+
