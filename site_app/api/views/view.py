@@ -248,7 +248,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={
-                'username': openapi.Schema(type=openapi.TYPE_STRING, description='Nombre de usuario o correo electrónico'),
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Correo electrónico'),
                 'password': openapi.Schema(type=openapi.TYPE_STRING, description='Contraseña'),
             },
         ),
