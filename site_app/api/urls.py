@@ -6,7 +6,7 @@ from api.controllers.ClienteController import ClienteViewSet
 from api.controllers.CampanaController import CampanaViewSet
 from api.controllers.UsuarioController import UsuarioViewSet
 from api import views
-from .views.view import TareaViewSet, CampanaViewSet,CampanaCrearViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleCalendarView
+from .views.view import TareaViewSet, CampanaViewSet,CampanaCrearViewSet, ClienteViewSet, AgregarClienteViewSet, EstadisticasCampanaViewSet, ImportarDatosView,CalendarView,fetch_events, TareaGoogleCalendarView, CustomTokenObtainPairView, CustomTokenRefreshView, TokenRefreshView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -36,6 +36,8 @@ urlpatterns = [
     # Permite importar datos de clientes desde un archivo CSV o similar.
     path('datos/importar/', ImportarDatosView.as_view(), name='importar_datos'),
     
+    
+    
     # Integración con Google Calendar
     path('fetch-events/', fetch_events, name='fetch_events'),
     path('', include('api.calendar_integration.urls')),
@@ -51,4 +53,10 @@ urlpatterns = [
     
     # Esta ruta para crear campañas es correcta
     path('campanas/crear/', CampanaCrearViewSet.as_view(), name='campana_crear'),
+
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+
+    # Swagger UI
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ] 
