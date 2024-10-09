@@ -103,6 +103,7 @@ class CampanaViewSet(viewsets.ModelViewSet):
     queryset = Campana.objects.all()
     serializer_class = CampanaSerializer
 
+    @swagger_auto_schema(operation_description="Crear una nueva campaña.")
     def create(self, request, *args, **kwargs):
         campana_service = CampanaService()
         data = request.data.copy()
@@ -124,19 +125,6 @@ class CampanaViewSet(viewsets.ModelViewSet):
             return Response({'error': 'El usuario proporcionado no existe'}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-# CampanaCrearViewSet with Swagger Documentation
-class CampanaCrearViewSet(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = Campana.objects.all()
-    serializer_class = CampanaSerializer
-
-    def post(self, request, *args, **kwargs):
-        try:
-            return self.create(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # CampanaEstadisticaViewSet with Swagger Documentation
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):

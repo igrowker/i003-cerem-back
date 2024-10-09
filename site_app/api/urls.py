@@ -34,29 +34,19 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     # Permite importar datos de clientes desde un archivo CSV o similar.
-    path('datos/importar/', ImportarDatosView.as_view(), name='importar_datos'),
-    
-    
-    
+    path('datos/importar/', ImportarDatosView.as_view(), name='importar_datos'), 
     # Integración con Google Calendar
     path('fetch-events/', fetch_events, name='fetch_events'),
     path('', include('api.calendar_integration.urls')),
-
     # Incluye las rutas generadas por el router
     path('', include(router.urls)),
-   
     path('accounts/', include('allauth.urls')),
     path('api/tareas/', TareaGoogleCalendarView.as_view(), name='tarea-google-calendar-list'),
     path('api/estadisticas/campana/<int:pk>/', EstadisticasCampanaViewSet.as_view(), name='estadisticas-campana-detail'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    
-    # Esta ruta para crear campañas es correcta
-    path('campanas/crear/', CampanaCrearViewSet.as_view(), name='campana_crear'),
-
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
-
     # Swagger UI
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ] 
