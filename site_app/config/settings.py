@@ -44,6 +44,7 @@ THIRD_APPS = [
     'api',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -57,6 +58,7 @@ AUTHENTICATION_BACKENDS = [
 INSTALLED_APPS = BASE_APPS + THIRD_APPS 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,6 +83,15 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+#cors
+
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',  
+    'https://i003-cerem-front.vercel.app/',
+]
+
 
 # Configuraciones adicionales de allauth (opcional)
 ACCOUNT_EMAIL_REQUIRED = True
