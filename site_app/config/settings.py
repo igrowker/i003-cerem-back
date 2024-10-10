@@ -19,8 +19,8 @@ SECRET_KEY = 'django-insecure-tdbajof^6om84qix%vxin+9hes2@^i$1@s%xu^bkh4umy$r#(g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['i003-cerem-back.onrender.com', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = []
+SECURE_SSL_REDIRECT = False 
 
 # Application definition
 
@@ -203,14 +203,20 @@ AUTH_USER_MODEL = "api.Usuario"
 
 ROOT_URLCONF = 'config.urls'
 SWAGGER_SETTINGS = {
-    'DEFAULTS': {
-        'USE_SESSION_AUTH': False,
-        'SECURITY_DEFINITIONS': {
-            'Bearer': {
-                'type': 'apiKey',
-                'in': 'header',
-                'name': 'Authorization'
-            }
+    'SECURITY_DEFINITIONS': { 
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Ingrese el token en formato: Bearer <token>',
         }
-    }
+    },
+    'USE_SESSION_AUTH': False, 
+    'SECURITY_REQUIREMENTS': [ 
+        {
+            'Bearer': []
+        }
+    ],
 }
+
+
