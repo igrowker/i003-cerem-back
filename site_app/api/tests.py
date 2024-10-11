@@ -40,8 +40,6 @@ class TestCampanaService(TestCase):
         campana.descripcion = "Descripción actualizada"
         campana.save()
 
-        # No es necesario recuperar la campaña de nuevo
-        # campana_actualizada = Campana.objects.get(id=campana.id)
         self.assertEqual(campana.nombre, "Campaña Actualizada")
         self.assertEqual(campana.descripcion, "Descripción actualizada")
 
@@ -54,8 +52,7 @@ class TestCampanaService(TestCase):
 
     def test_fallo_integracion_ia(self):
         # Simular un fallo en la integración con IA
-        # Como esta parte depende de lógica de negocio externa, no la aplicamos directamente en este test
-        pass
+        pass  # Implementa la lógica de prueba según sea necesario
 
     def test_interacciones_base_datos(self):
         # Crear una campaña y verificar la interacción con la base de datos
@@ -110,8 +107,6 @@ class TestClienteService(TestCase):
         cliente.email = "cliente@actualizado.com"
         cliente.save()
 
-        # No es necesario recuperar el cliente de nuevo
-        # cliente_actualizado = Cliente.objects.get(id=cliente.id)
         self.assertEqual(cliente.nombre, "Cliente Actualizado")
         self.assertEqual(cliente.email, "cliente@actualizado.com")
 
@@ -141,13 +136,9 @@ class TestClienteService(TestCase):
     def test_fallo_consulta_cliente_inexistente(self):
         # Intentar consultar un cliente que no existe
         clientes = Cliente.objects.filter(id=999)
-        if not clientes.exists():
-            # No existe el cliente
-            pass
+        self.assertFalse(clientes.exists())  # Verificar que no existe
 
     def test_fallo_edicion_cliente_inexistente(self):
         # Intentar editar un cliente que no existe
         clientes = Cliente.objects.filter(id=999)
-        if not clientes.exists():
-            # No existe el cliente
-            pass
+        self.assertFalse(clientes.exists())  # Verificar que no existe

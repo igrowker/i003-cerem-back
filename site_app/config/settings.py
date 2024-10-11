@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # Cargar variables de entorno .env
 load_dotenv()
@@ -18,8 +19,8 @@ SECRET_KEY = 'django-insecure-tdbajof^6om84qix%vxin+9hes2@^i$1@s%xu^bkh4umy$r#(g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['i003-cerem-back.onrender.com', '127.0.0.1', 'localhost']
+SECURE_SSL_REDIRECT = False 
 
 # Application definition
 
@@ -42,6 +43,8 @@ THIRD_APPS = [
     'oauth2_provider',
     'api',
     'drf_yasg',
+    'rest_framework_simplejwt',
+    'corsheaders',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -55,6 +58,7 @@ AUTHENTICATION_BACKENDS = [
 INSTALLED_APPS = BASE_APPS + THIRD_APPS 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,6 +83,15 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+#cors
+
+CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',  
+    'https://i003-cerem-front.vercel.app',
+]
+
 
 # Configuraciones adicionales de allauth (opcional)
 ACCOUNT_EMAIL_REQUIRED = True
@@ -115,6 +128,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+
+# Agregar JWT a la configuración de REST_FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Usar JWT para autenticación
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # Requiere autenticación para todas las vistas por defecto
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',  # Para generación de esquemas (opcional)
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Duración del token de acceso
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Duración del token de refresco
+    'ROTATE_REFRESH_TOKENS': True,                  # Rotar el token de refresco después de su uso
+    'BLACKLIST_AFTER_ROTATION': True,               # Lista negra para tokens antiguos
+    'ALGORITHM': 'HS256',                           # Algoritmo de firma
+    'SIGNING_KEY': SECRET_KEY,                      # Clave de firma
+    'AUTH_HEADER_TYPES': ('Bearer',),               # Tipo de encabezado de autenticación
+}
+
 
 # BASE DE DATOS: POSTGRESQL
 DATABASES = {
@@ -178,14 +214,20 @@ AUTH_USER_MODEL = "api.Usuario"
 
 ROOT_URLCONF = 'config.urls'
 SWAGGER_SETTINGS = {
-    'DEFAULTS': {
-        'USE_SESSION_AUTH': False,
-        'SECURITY_DEFINITIONS': {
-            'Bearer': {
-                'type': 'apiKey',
-                'in': 'header',
-                'name': 'Authorization'
-            }
+    'SECURITY_DEFINITIONS': { 
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Ingrese el token en formato: Bearer <token>',
         }
-    }
+    },
+    'USE_SESSION_AUTH': False, 
+    'SECURITY_REQUIREMENTS': [ 
+        {
+            'Bearer': []
+        }
+    ],
 }
+
+
