@@ -95,12 +95,27 @@ class Tarea(models.Model):
 
 # Campana gestionadas por User
 class Campana(models.Model):
+      # Definir las opciones como un enumerado
+    EMAIL = 'email'
+    GOOGLE_ADS = 'google_ads'
+    SOCIAL_MEDIA = 'social_media'
+    BANNER = 'banner'
+
+    TIPO_CAMPANA_CHOICES = [
+        (EMAIL, 'Email Marketing'),
+        (GOOGLE_ADS, 'Google Ads'),
+        (SOCIAL_MEDIA, 'Social Media'),
+        (BANNER, 'Banner Advertising'),
+    ]
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField()
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     fecha_inicio = models.DateField(null=True, blank=True)
+    fecha_finalizacion = models.DateField(null=True ,blank=True)
     usuario = models.ForeignKey('api.Usuario', on_delete=models.CASCADE)
+    tipo_campana = models.CharField(max_length=50, choices=TIPO_CAMPANA_CHOICES, default=EMAIL)
     rendimiento = models.OneToOneField(
         'api.EstadisticaCampana', 
         on_delete=models.CASCADE, 
@@ -112,6 +127,8 @@ class Campana(models.Model):
     conversiones_totales = models.IntegerField(default=0)
     google_calendar_event_id = models.CharField(max_length=255, null=True, blank=True)
     google_keep_note_id = models.CharField(max_length=255, null=True, blank=True)
+    presupuesto = models.FloatField(null=True, blank=True)
+    tamaño_audiencia = models.IntegerField(null=True, blank=True)  # target_audience_size
 
     class Meta:
         db_table = 'campanas'

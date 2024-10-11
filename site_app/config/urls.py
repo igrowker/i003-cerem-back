@@ -18,7 +18,7 @@ from django.urls import path, include
 from rest_framework import routers
 from api.views import view
 from .swagger import schema_view
-from api.views.view import CustomTokenObtainPairView, CustomTokenRefreshView
+from api.views.view import CustomTokenObtainPairView, CustomTokenRefreshView, PredecirRendimientoView
 from api.controllers.UsuarioController import UsuarioViewSet
 
 # Routers para las vistas de la API
@@ -41,5 +41,6 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    path('campanas/predecir_rendimiento/', PredecirRendimientoView.as_view(), name='predecir_rendimiento'),
 
 ]

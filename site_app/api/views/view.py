@@ -12,7 +12,7 @@ import csv
 from ..services import EstadisticasService,CampanaService,ClienteService,google_calendarService 
 from ..services.CampanaService import CampanaService
 from ..models import Tarea, Campana, Cliente, EstadisticaCampana,Usuario, Event
-from ..serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer, EventSerializer
+from ..serializers import TareaSerializer, CampanaSerializer, ClienteSerializer, EstadisticaCampanaSerializer, PredecirRendimientoSerializer
 from ..repositories import TareasRepository,CampanaRepository,ClienteRepository,EstadisticasRepository
 from transformers import pipeline
 import csv
@@ -267,3 +267,46 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 class CustomTokenRefreshView(TokenRefreshView):
     pass
 
+class PredecirRendimientoView(APIView):
+
+    @swagger_auto_schema(
+        request_body=PredecirRendimientoSerializer,
+        responses={
+            200: openapi.Response('Rendimiento predicho', PredecirRendimientoSerializer),
+            400: 'Error en los datos de entrada'
+        }
+    )
+
+    def post(self, request):
+        # Validar los datos con el serializer
+        serializer = PredecirRendimientoSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            # Los datos ya están validados y se pueden extraer del serializer
+            validated_data = serializer.validated_data
+
+            # Instanciar el servicio de la campaña
+            campana_service = CampanaService()
+
+            # Simular una "campaña" temporal con los datos validados
+            class SimulatedCampana:
+                def __init__(self, data):
+                    self.tipo_campana = data['tipo_campana']
+                    self.fecha_inicio = data['fecha_inicio']
+                    self.fecha_finalizacion = data['fecha_finalizacion']
+                    self.presupuesto = data['presupuesto']
+                    self.tamaño_audiencia = data['tamaño_audiencia']
+
+            # Crear la campaña simulada
+            campana = SimulatedCampana(validated_data)
+
+            # Llamar al método para calcular el rendimiento
+            rendimiento = campana_service.calcular_rendimiento(campana)
+
+            # Retornar la respuesta con el rendimiento predicho
+            return Response({
+                'rendimiento_predicho': rendimiento
+            }, status=status.HTTP_200_OK)
+
+        # Si el serializer no es válido, retornar los errores
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

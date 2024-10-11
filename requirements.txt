@@ -44,6 +44,7 @@ nvidia-nvjitlink-cu12==12.6.68
 nvidia-nvtx-cu12==12.1.105
 oauthlib==3.2.2
 packaging==24.1
+pandas==2.2.3
 proto-plus==1.24.0
 protobuf==5.28.1
 psycopg2==2.9.9
@@ -53,6 +54,7 @@ pyasn1_modules==0.4.1
 pycparser==2.22
 PyJWT==2.9.0
 pyparsing==3.1.4
+python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.2
 PyYAML==6.0.2
@@ -61,6 +63,7 @@ requests==2.32.3
 requests-oauthlib==2.0.0
 rsa==4.9
 safetensors==0.4.5
+six==1.16.0
 sqlparse==0.5.1
 sympy==1.13.2
 tokenizers==0.19.1
