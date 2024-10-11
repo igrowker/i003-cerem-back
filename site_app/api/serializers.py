@@ -75,3 +75,20 @@ class UsuarioSerializer(serializers.ModelSerializer):
         usuario.save()  # Guarda la nueva instancia de usuario en la base de datos
         return usuario  # Devuelve el usuario recién creado
 
+class PredecirRendimientoSerializer(serializers.Serializer):
+    tipo_campana = serializers.ChoiceField(choices=[
+        ('email', 'Email Marketing'),
+        ('google_ads', 'Google Ads'),
+        ('social_media', 'Social Media'),
+        ('banner', 'Banner Advertising'),
+    ])
+    fecha_inicio = serializers.DateField()
+    fecha_finalizacion = serializers.DateField()
+    presupuesto = serializers.FloatField()
+    tamaño_audiencia = serializers.IntegerField()
+
+    # Validación para asegurarse de que la fecha_finalización sea posterior a la fecha_inicio
+    def validate(self, data):
+        if data['fecha_finalizacion'] <= data['fecha_inicio']:
+            raise serializers.ValidationError("La fecha de finalización debe ser posterior a la fecha de inicio.")
+        return data
