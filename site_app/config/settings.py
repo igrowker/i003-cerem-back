@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # Cargar variables de entorno .env
 load_dotenv()
@@ -42,6 +43,7 @@ THIRD_APPS = [
     'oauth2_provider',
     'api',
     'drf_yasg',
+    'rest_framework_simplejwt',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -115,6 +117,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+
+# Agregar JWT a la configuración de REST_FRAMEWORK
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Usar JWT para autenticación
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # Requiere autenticación para todas las vistas por defecto
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',  # Para generación de esquemas (opcional)
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Duración del token de acceso
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Duración del token de refresco
+    'ROTATE_REFRESH_TOKENS': True,                  # Rotar el token de refresco después de su uso
+    'BLACKLIST_AFTER_ROTATION': True,               # Lista negra para tokens antiguos
+    'ALGORITHM': 'HS256',                           # Algoritmo de firma
+    'SIGNING_KEY': SECRET_KEY,                      # Clave de firma
+    'AUTH_HEADER_TYPES': ('Bearer',),               # Tipo de encabezado de autenticación
+}
+
 
 # BASE DE DATOS: POSTGRESQL
 DATABASES = {
