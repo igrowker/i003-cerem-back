@@ -16,7 +16,6 @@ router.register(r'usuarios', UsuarioViewSet)  # Esto crea los endpoints CRUD par
 # URLs para la API
 urlpatterns = [
     path('', include(router.urls)),
-    path('campanas/crear/', view.CampanaCrearViewSet.as_view(), name='campana-crear'),
     path('campanas/<int:pk>/estadisticas/', view.CampanaEstadisticaViewSet.as_view({'get': 'estadisticas'}), name='campana-estadisticas'),
     path('importar-datos/', view.ImportarDatosView.as_view(), name='importar-datos'),
     # Swagger y Redoc para la documentación de la API
