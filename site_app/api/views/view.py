@@ -126,17 +126,7 @@ class CampanaViewSet(viewsets.ModelViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# CampanaCrearViewSet with Swagger Documentation
-class CampanaCrearViewSet(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = Campana.objects.all()
-    serializer_class = CampanaSerializer
 
-    def post(self, request, *args, **kwargs):
-        try:
-            return self.create(request, *args, **kwargs)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 # CampanaEstadisticaViewSet with Swagger Documentation
 class CampanaEstadisticaViewSet(viewsets.ReadOnlyModelViewSet):

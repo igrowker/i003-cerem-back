@@ -47,6 +47,7 @@ urlpatterns = [
    
     path('accounts/', include('allauth.urls')),
     path('api/tareas/', TareaGoogleCalendarView.as_view(), name='tarea-google-calendar-list'),
+
     path('api/estadisticas/campana/<int:pk>/', EstadisticasCampanaViewSet.as_view(), name='estadisticas-campana-detail'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

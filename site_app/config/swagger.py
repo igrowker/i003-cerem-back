@@ -1,6 +1,8 @@
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from rest_framework import permissions
 
+# Definir el esquema de seguridad Bearer Token
 schema_view = get_schema_view(
     openapi.Info(
         title="Mi API",
@@ -11,5 +13,5 @@ schema_view = get_schema_view(
         license=openapi.License(name="MIT License"),
     ),
     public=True,
-    permission_classes=[],
+    permission_classes=(permissions.AllowAny,),
 )
