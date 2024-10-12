@@ -7,16 +7,47 @@ import logging
 from datetime import timedelta
 from django.db import IntegrityError 
 from django.core.exceptions import ObjectDoesNotExist
+import pickle
+import pandas as pd
 
 class CampanaService:
     def __init__(self):
         self.generador_texto = pipeline("text-generation", model="facebook/bart-large-cnn")
         self.campana_repository = CampanaRepository()
 
-    def calcular_rendimiento(self, estadistica ):
+        # Cargar el modelo de regresión
+        model_filename = 'modelo_regresion.pkl'
+        with open(model_filename, 'rb') as file:
+            self.loaded_model = pickle.load(file)
+
+    def calcular_rendimiento(self, campana):
         # Lógica para calcular el rendimiento utilizando las estadísticas
-        rendimiento = (estadistica.tasa_apertura + estadistica.tasa_conversion) / 2
-        return rendimiento
+        # rendimiento = (estadistica.tasa_apertura + estadistica.tasa_conversion) / 2
+        # return rendimiento
+
+        # Extraer datos de la campaña
+        campaign_type = campana.tipo_campana
+        duration_days = (campana.fecha_finalizacion - campana.fecha_inicio).days
+        budget = campana.presupuesto
+        target_audience_size = campana.tamaño_audiencia
+
+        # Crear un DataFrame con los datos de entrada para el modelo
+        input_data = pd.DataFrame({
+            'duration_days': [duration_days],
+            'budget': [budget],
+            'target_audience_size': [target_audience_size],
+            'campaign_type_email': [True if campaign_type == Campana.EMAIL else False],
+            'campaign_type_google_ads': [True if campaign_type == Campana.GOOGLE_ADS else False],
+            'campaign_type_social_media': [True if campaign_type == Campana.SOCIAL_MEDIA else False],
+            'campaign_type_banner': [True if campaign_type == Campana.BANNER else False]
+        })
+
+        # Realizar la predicción utilizando el modelo de regresión cargado
+        predicted_rendimiento = self.loaded_model.predict(input_data)[0]
+
+        # Retornar el rendimiento predicho
+        return predicted_rendimiento
+
 
     def crear_campana_con_contenido(self, data):
         serializer = CampanaSerializer(data=data)
