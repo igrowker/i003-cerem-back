@@ -19,6 +19,11 @@ class CampanaSerializer(serializers.ModelSerializer):
         required=False,  
     )
     usuario = serializers.PrimaryKeyRelatedField(read_only=True)
+    fecha_finalizacion = serializers.DateTimeField(
+        input_formats=['%d/%m/%Y'], 
+        format=None,  
+        required=False,  
+    )
 
     class Meta:
         model = Campana
