@@ -19,7 +19,11 @@ SECRET_KEY = 'django-insecure-tdbajof^6om84qix%vxin+9hes2@^i$1@s%xu^bkh4umy$r#(g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< Updated upstream
 ALLOWED_HOSTS = ['i003-cerem-back.onrender.com', '127.0.0.1', 'localhost']
+=======
+ALLOWED_HOSTS = ['i003-cerem-back.onrender.com', '127.0.0.1']
+>>>>>>> Stashed changes
 SECURE_SSL_REDIRECT = False 
 
 # Application definition
@@ -142,13 +146,13 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Duración del token de acceso
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Duración del token de refresco
-    'ROTATE_REFRESH_TOKENS': True,                  # Rotar el token de refresco después de su uso
-    'BLACKLIST_AFTER_ROTATION': True,               # Lista negra para tokens antiguos
-    'ALGORITHM': 'HS256',                           # Algoritmo de firma
-    'SIGNING_KEY': SECRET_KEY,                      # Clave de firma
-    'AUTH_HEADER_TYPES': ('Bearer',),               # Tipo de encabezado de autenticación
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=365 * 100),  # Duración de 100 años
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365 * 100),  # También para el token de refresco
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 
