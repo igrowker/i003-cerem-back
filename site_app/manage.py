@@ -20,7 +20,7 @@ def main():
 
     # Modifica para correr el servidor en el puerto especificado
     if len(sys.argv) == 1:
-        sys.argv += ['runserver', f'0.0.0.0:{port}']
+        sys.argv += ['runserver', f'127.0.0.1:{port}']
 
     execute_from_command_line(sys.argv)
 
