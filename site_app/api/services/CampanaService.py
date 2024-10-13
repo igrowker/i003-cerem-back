@@ -16,9 +16,9 @@ class CampanaService:
         self.campana_repository = CampanaRepository()
 
         # Cargar el modelo de regresión
-        model_filename = 'modelo_regresion.pkl'
-        with open(model_filename, 'rb') as file:
-            self.loaded_model = pickle.load(file)
+        # model_filename = 'modelo_regresion.pkl'
+        # with open(model_filename, 'rb') as file:
+        #     self.loaded_model = pickle.load(file)
 
     def calcular_rendimiento(self, campana):
         # Lógica para calcular el rendimiento utilizando las estadísticas
